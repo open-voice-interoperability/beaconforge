@@ -5,7 +5,7 @@
 
 # Overview
 Beaconforce provides a Python framework for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
-<img src="images/baiovon.png" width="50%" alt="BeaconForge Logo">
+<img src="images/aiovon.png" width="50%" alt="BeaconForge Logo">
 See please the following Arxiv papers for more information about the specifications:<br />
 https://arxiv.org/abs/2407.19438<br />
 https://arxiv.org/abs/2411.05828<br />

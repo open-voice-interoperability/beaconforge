@@ -1,4 +1,6 @@
 # Beaconforge
+![Alt text](images/beaconforge_logo.png)
+
 ## An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 
 # Overview

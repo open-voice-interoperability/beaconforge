@@ -1,5 +1,5 @@
 # Beaconforge
-![Alt text](images/beaconforge_logo.png)
+<img src="images/beaconforge_logo.png" width="50%" alt="BeaconForge Logo">
 
 ## An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 

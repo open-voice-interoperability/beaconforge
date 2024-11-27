@@ -1,7 +1,7 @@
 # Beaconforge
 <img src="images/b_forge_logo.png" width="30%" alt="BeaconForge Logo">
 
-## An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
+### An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 
 # Overview
 Beaconforge provides a Python framework for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />

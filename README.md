@@ -5,7 +5,7 @@
 
 # Overview
 Beaconforge provides a Python framework for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
-<img src="images/aiovon.png" width="60%" alt="BeaconForge Logo">
+<img src="images/aiovon.png" width="80%" alt="BeaconForge Logo">
 <br />
 See please the following Arxiv papers for more information about the specifications:<br />
 <a href="https://arxiv.org/abs/2407.19438" target="_blank">Link to Agentic Research Paper #1</a><br />

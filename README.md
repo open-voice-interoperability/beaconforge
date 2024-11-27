@@ -13,9 +13,6 @@ See please the following Arxiv papers for more information about the specificati
 The official specifications can be found in <br/>
 https://github.com/open-voice-interoperability/docs/tree/main/specifications
 
-# Requirements
-...
-
 # Quickstart
 
 ### PythonAnywhere-hosted Assistant

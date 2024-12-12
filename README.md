@@ -24,9 +24,9 @@ The PythonAnywhere-hosted assistant consists of two main files: `local.py` and `
 
 Note you will need a way to send OVON messages to your assistant server. There are several ways to accomplish this. As a simple test, you can use a tool like Postman or curl to send OVON messages directly to your assistant server by HTTP POST. You can also use a client to provide a user interface and to send OVON messages to the server assistant from the client. You can implement a client by consulting the specifications or by using the sandbox implementation at <https://github.com/open-voice-interoperability/open-voice-sandbox>. 
 
-###### IMPORTANT NOTES:  The python anywhere server I have created (aka "Pete") in the sandbox uses `weather_api.py`, so if you are copying the code over please make sure to add that file to your structure as well as insuring your own API key from [here]( https://openweathermap.org/api) is present in the `assistant.py` file on line 90
+###### IMPORTANT NOTES:  The python anywhere server we have created (aka "Pete") in the sandbox uses `weather_api.py`, so if you are copying the code over please make sure to add that file to your structure as well as insuring your own API key from [here]( https://openweathermap.org/api) is present in the `assistant.py` file on line 90
 
-## ${\textsf{\color{#3AABFC}local.py}}$
+## Local setup
 ### Install Dependencies
 * Make sure to install the required dependencies by opening a Bash console and running the following command:
     * ``` pip3.10 install --user flask_cors```
@@ -37,7 +37,7 @@ Note you will need a way to send OVON messages to your assistant server. There a
 * It imports the assistant module (`assistant.py`) for response generation.
 * The `generate_response` function is called to handle incoming OVON messages.
 
-## ${\textsf{\color{#3AABFC}assistant.py}}$
+### assistant.py
 ### Code Overview
 * The assistant file defines a `generate_response` function that processes OVON events and generates appropriate responses. 
 * It recognizes different event types, such as "invite" and "utterance", adapting responses accordingly.
@@ -48,7 +48,7 @@ Note you will need a way to send OVON messages to your assistant server. There a
 * Modify `greetings` and `weather_terms` lists to tailor the assistant's behavior to specific needs. 
 * Adapt the response logic based on specific use cases.
 
-## ${\textsf{\color{#3AABFC}Creating your own PythonAnywhere assistant }}$
+## Creating your own PythonAnywhere assistant
 #### 1. Create a PythonAnywhere account
 * If you don't have a PythonAnywhere account, sign up at [PythonAnywhere](https://www.pythonanywhere.com/)
 #### 2. Access PythonAnywhere 

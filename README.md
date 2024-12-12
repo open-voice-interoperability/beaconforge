@@ -64,6 +64,7 @@ Note you will need a way to send OVON messages to your assistant server. There a
 * In the Bash console, install the necessary dependencies. For example, if you are using Flask and Flask-CORS, run:
 ```pip3.10 install --user flask flask-cors```
 #### 7. Running the Server
+* From the "Files" tab, locate the "assistant.py" file, and click on it to open it in the PythonAnywhere editor.
 * To run the server, press the `>>>Run` button.
 * If that doesn't work then press on the circle refresh looking button next to the `>>>Run` button.
 

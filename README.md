@@ -35,7 +35,7 @@ Note you will need a way to send OVON messages to your assistant server. There a
 ### Code Overview
 * The Flask server listens for POST requests on the `/` endpoint.
 * It imports the assistant module (`assistant.py`) for response generation.
-* The `generate_response` function is called to handle incoming OVON messages.
+* The `generate_response` function in assistant.py is called to handle incoming OVON messages.
 
 ### assistant.py
 ### Code Overview

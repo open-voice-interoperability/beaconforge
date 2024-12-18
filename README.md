@@ -4,7 +4,7 @@
 ### An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 
 # Overview
-Beaconforge provides a Python framework for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
+Beaconforge provides a Python framework (with future plans for other languages) for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
 <img src="images/aiovon.png" width="60%" alt="BeaconForge Logo">
 <br />
 
@@ -20,32 +20,54 @@ https://github.com/open-voice-interoperability/docs/tree/main/specifications
 
 ### PythonAnywhere-hosted Assistant
 
-The PythonAnywhere-hosted assistant consists of two main files: `local.py` and `assistant.py`. This assistant is designed to respond to various events, including invites and user utterances. It demonstrates how to integrate the assistant with a Flask server. This directory can be copied to pythonanywhere.com to be used or you can start the `local.py` file from your command line by navigating to the correct directory and using the command `python local.py`.
+The PythonAnywhere-hosted assistant consists of two main files: `flask_app.py` and `assistant.py`. Two additional files `intentContents.json` and `weather_api.py` provide additional functionality and a weather example (how to use an external API) to help build a simple OVON server. This assistant is pre-built to respond to various events, including invites, user utterances, and manifest requests. It demonstrates how to integrate the assistant with a Flask server. This directory can be copied to pythonanywhere.com and will run on a free account (that you will need to set up). You must follow the instructions at the top of `flask_app.py`.
+```
+# Note!!!! you will need to install flask_cors
+#    open a bash console and do this
+#    pip3.10 install --user flask_cors
+```
+You will only need to do this once after creating you PythonAnywhere account. This will be explained further later in this document.
+### Note: You can run it locally if you have some basic Python experience.
 
-Note you will need a way to send OVON messages to your assistant server. There are several ways to accomplish this. As a simple test, you can use a tool like Postman (see <a href="using_postman.md" target="_blank">Using Postman</a> for more information) or curl to send OVON messages directly to your assistant server by HTTP POST. You can also use a client to provide a user interface and to send OVON messages to the server assistant from the client. You can implement a client by consulting the specifications or by using the sandbox implementation at <https://github.com/open-voice-interoperability/open-voice-sandbox>. 
+Navigate to the directory containing the file `flask_app.py`. Type the command `python flask_app.py`. (You must also pip install `flask_cors` on your computer) then the Beaconforge server will run as a localhost on your computer.
+
+### Using the OVON messages
+
+You will need a way to send OVON messages to your assistant server. There are several ways to accomplish this. As a simple test, you can use a tool like **Postman** or **curl** to send OVON messages directly to your assistant server by HTTP POST. You can also use a client to provide a user interface and to send OVON messages to the server assistant from the client. The **open-voice-sandbox** is a voice and text client that will inteact with OVON assistants and it has tools to examine the messages and flow of your interactions.  <https://github.com/open-voice-interoperability/open-voice-sandbox>.
+
+You are encouraged to use the code in the sandbox to build your own client. 
 
 ###### IMPORTANT NOTES:  The python anywhere server we have created (aka "Pete") in the sandbox uses `weather_api.py`, so if you are copying the code over please make sure to add that file to your structure as well as insuring your own API key from [here]( https://openweathermap.org/api) is present in the `assistant.py` file on line 90
 
-## Local setup
-### Install Dependencies
-* Make sure to install the required dependencies by opening a Bash console and running the following command:
-    * ``` pip3.10 install --user flask_cors```
-
+## Beaconforge  setup
 
 ### Code Overview
 * The Flask server listens for POST requests on the `/` endpoint.
 * It imports the assistant module (`assistant.py`) for response generation.
-* The `generate_response` function in assistant.py is called to handle incoming OVON messages.
-
+* The `generate_response` function is called to handle incoming OVON messages.
+* The `intentConcepts.json` file is used for "word-spotting" by the **search_intent(input_text)** function in `assistant.py. It is a basic tool to detect very basic intents that can be used by your assistant. You can add a new concept by just adding a new concepts array element e.g.
+```
+    {
+      "name": "amphibian",
+      "examples": [
+        "frog",
+        "toad",
+        "salamander",
+        "newt",
+        "caecilian"
+      ]
+    },
+```
+When the input_text contains **any** of the examples it will return "amphibian".
 ### assistant.py
 ### Code Overview
 * The assistant file defines a `generate_response` function that processes OVON events and generates appropriate responses. 
-* It recognizes different event types, such as "invite" and "utterance", adapting responses accordingly.
-* This particular assistant checks for greetings and specific keywords (e.g., "weather") to provide context-aware responses.
+* It recognizes different **event** types, such as **invite**, **utterance**, and **requestManifest** adapting responses accordingly.
+* This particular simple assistant checks for greetings and specific keywords (e.g., "weather") to provide context-aware responses.
 
 
 ### Customization
-* Modify `greetings` and `weather_terms` lists to tailor the assistant's behavior to specific needs. 
+* Modify `greetings` and `weather_terms` examples (or add new `concepts`) to tailor the assistant's behavior to specific needs. 
 * Adapt the response logic based on specific use cases.
 
 ## Creating your own PythonAnywhere assistant
@@ -53,19 +75,107 @@ Note you will need a way to send OVON messages to your assistant server. There a
 * If you don't have a PythonAnywhere account, sign up at [PythonAnywhere](https://www.pythonanywhere.com/)
 #### 2. Access PythonAnywhere 
 * Log in to  your PythonAnywhere account and navigate to the Dashboard
+
+* Install Dependencies: **Make sure** to install the required dependencies by opening a Bash console and running the following command:
+    * ``` pip3.10 install --user flask_cors```
+
 #### 3. Create Web App in PythonAnywhere 
 * Navigate to the Web tab and follow the steps they show to create a web app.
 * Once finished, it will create a new folder named `/mysite`, this is where we will be working and uploading the files.
 #### 4. Upload Your Files
-* Navigate to the "mysite" directory (go to "Files" tab) and upload your assistant files, `local.py` and `assistant.py` that are found in this directory.
+* Navigate to the "mysite" directory (go to "Files" tab) and upload your assistant files (`flask_app.py`, `assistant.py`, `weather_api.py`, and `intentConcepts.json`) that are found in the beaconforge/PythonAnywhere directory.
+* Note: You should modify the "manifest" section of code in `assistant.py` to describe your assistant. It will simplify adding your assistant to the sandbox client, and it is required for clients in the future to locate your assistant (think web search to find a site).
+* What is in the file:
+```
+        manifestRequestEvent = {
+            "eventType": "publishManifest",
+            "parameters": {
+                "manifest" : {
+                    "identification":
+                    {
+                        "serviceEndpoint": "http://someAcctName.pythonanywhere.com",
+                        "organization": "Sandbox_LFAI",
+                        "conversationalName": "Pete",
+                        "serviceName": "Python Anywhere",
+                        "role": "Basic assistant",
+                        "synopsis" : "I am a pretty dumb assistant."
+                    },
+                    "capabilities": [
+                        {
+                            "keyphrases": [
+                                "dumb",
+                                "basic",
+                                "lazy"
+                            ],
+                            "languages": [
+                                "en-us"
+                            ],
+                            "descriptions": [
+                                "just some test code to test manifest messages",
+                                "simple minded unit test code"
+                            ],
+                            "supportedLayers": [
+                                "text"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+```
+* What you should personalize for your assistant (the XXXXXXX values):
+```
+        manifestRequestEvent = {
+            "eventType": "publishManifest",
+            "parameters": {
+                "manifest" : {
+                    "identification":
+                    {
+                        "serviceEndpoint": "http://XXXXXXXX.pythonanywhere.com",
+                        "organization": "XXXXXXX",
+                        "conversationalName": "XXXXXXX",
+                        "serviceName": "XXXXXXXX",
+                        "role": "XXXXXXXX",
+                        "synopsis" : "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+                    },
+                    "capabilities": [
+                        {
+                            "keyphrases": [
+                                "XXXXX",
+                                "XXXXXX",
+                                "XXX"
+                            ],
+                            "languages": [
+                                "en-us"
+                            ],
+                            "descriptions": [
+                                "XXXXXXXXXXXXXXXXXXXXX",
+                                "XXXXXXXXXXXXXXXXXXXXXX"
+                            ],
+                            "supportedLayers": [
+                                "text"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+```
 #### 5. Open Bash Console
 * Navigate to "Consoles" tab and open a Bash console.
 #### 6. Install Dependencies
-* In the Bash console, install the necessary dependencies. For example, if you are using Flask and Flask-CORS, run:
+* In the Bash console, install the necessary dependencies. For example, we need to use Flask and Flask-CORS, run:
 ```pip3.10 install --user flask flask-cors```
+* If your assistant will use any other special imports then install them now in the same way.
 #### 7. Running the Server
-* From the "Files" tab, locate the "assistant.py" file, and click on it to open it in the PythonAnywhere editor.
-* To run the server, press the `>>>Run` button.
-* If that doesn't work then press on the circle refresh looking button next to the `>>>Run` button.
+* From the "Files" tab, locate the `mysite/flask_app.py` file, and click on it to open it in the PythonAnywhere editor.
+* You **must** upload your server to the pythonanywhere host server. This is not obvious but the `>>>Run` button **only** runs it in your dedicated space. The "swirly-arrows" button **uploads** it to be served on the internet. This may take 10-30 seconds. The last button (just to the right of the `>>>Run` button) is what you want.
+
+<img src="images/uploadButton.png" width="100%" alt="BeaconForge Logo">
+
+* At this point you should be able to test if it is running. It will be accessable at `http://yourAcctName.pythonanywhere.com`
+* You can do a postman or curl test now.
+#### 8. Now is a good time to clone the **open-voice-sandbox** mentioned above.
+* It will allow you to access your assistant via voice or text. But you will have to add your assistant to the sandbox list of assistants via the Add_Existing_Assistant function.
 
 

@@ -45,7 +45,7 @@ You are encouraged to use the code in the sandbox to build your own client.
 * The Flask server listens for POST requests on the `/` endpoint.
 * It imports the assistant module (`assistant.py`) for response generation.
 * The `generate_response` function is called to handle incoming OVON messages.
-* The `intentConcepts.json` file is used for "word-spotting" by the **search_intent(input_text)** function in `assistant.py. It is a basic tool to detect very basic intents that can be used by your assistant. You can add a new concept by just adding a new concepts array element e.g.
+* The `intentConcepts.json` file is used for "word-spotting" by the **search_intent(input_text)** function in `assistant.py. It is a basic tool to detect very basic intents that can be used by your assistant. You should not play with this file just yet, but later (after the basic server is running) you can add a new concept by just adding a new concepts array element e.g.
 ```
     {
       "name": "amphibian",

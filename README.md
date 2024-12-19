@@ -33,7 +33,7 @@ Navigate to the directory containing the file `flask_app.py`. Type the command `
 
 ### Using the OVON messages
 
-You will need a way to send OVON messages to your assistant server. There are several ways to accomplish this. As a simple test, you can use a tool like **Postman** or **curl** to send OVON messages directly to your assistant server by HTTP POST. You can also use a client to provide a user interface and to send OVON messages to the server assistant from the client. The **open-voice-sandbox** is a voice and text client that will inteact with OVON assistants and it has tools to examine the messages and flow of your interactions.  <https://github.com/open-voice-interoperability/open-voice-sandbox>.
+You will need a way to send OVON messages to your assistant server. There are several ways to accomplish this. As a simple test, you can use a tool like **Postman** (see <a href="using_postman.md" target="_blank">Using Postman</a> for more information)  or **curl** to send OVON messages directly to your assistant server by HTTP POST. You can also use a client to provide a user interface and to send OVON messages to the server assistant from the client. The **open-voice-sandbox** is a voice and text client that will inteact with OVON assistants and it has tools to examine the messages and flow of your interactions.  <https://github.com/open-voice-interoperability/open-voice-sandbox>.
 
 You are encouraged to use the code in the sandbox to build your own client. 
 

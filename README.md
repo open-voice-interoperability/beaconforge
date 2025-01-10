@@ -177,5 +177,38 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * You can do a postman or curl test now.
 #### 8. Now is a good time to clone the **open-voice-sandbox** mentioned above.
 * It will allow you to access your assistant via voice or text. But you will have to add your assistant to the sandbox list of assistants via the Add_Existing_Assistant function.
+# 9. Basic test with Postman
+POST:
+http://youraccount.pythonanywhere.com
+Body:
+{
+  "ovon": {
+    "schema": {
+      "version": "0.9.3"
+    },
+    "conversation": {
+      "id": "31050879662407560061859425913208"
+    },
+    "sender": {
+      "from": "https://someBot.com"
+    },
+    "events": [
+      {
+        "to": "https://youraccount.pythonanywhere.com",
+        "eventType": "requestManifest"
+      }
+    ]
+  }
+}
+Expected answer:
+{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.0", "url":
+"not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType":
+"publishManifest", "parameters": {"manifest": {"identification": {"serviceEndpoint":
+"http://didacus.pythonanywhere.com", "organization": "Sandbox_LFAI", "conversationalName": "Dieguito", "serviceName":
+"Python Anywhere", "role": "Basic assistant", "synopsis": "I am a pretty general purpose assistant specialized in
+anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languages": ["en-us"], "descriptions":
+["Didacus test code", "Didacus simple minded unit test code"], "supportedLayers": ["text"]}]}}}, {"eventType":
+"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:13:44"},
+"features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 
 

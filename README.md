@@ -177,7 +177,8 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * You can do a postman or curl test now.
 #### 8. Now is a good time to clone the **open-voice-sandbox** mentioned above.
 * It will allow you to access your assistant via voice or text. But you will have to add your assistant to the sandbox list of assistants via the Add_Existing_Assistant function.
-# 9. Basic test with Postman
+# 9. Basic tests with Postman
+### Example 1: Get the Manifest
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
@@ -212,4 +213,61 @@ anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languag
 ["Didacus test code", "Didacus simple minded unit test code"], "supportedLayers": ["text"]}]}}}, {"eventType":
 "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:13:44"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
+```
+### Example 2: Send an utterances
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+    "ovon": {
+      "schema": {
+        "version": "0.9.3",
+        "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+      },
+      "conversation": {
+        "id": "conv_1699812834794"
+      },
+      "sender": {
+        "from": "https://organization_url_from",
+        "reply-to": "https://organization_url_to"
+      },
+      "responseCode": {
+            "code": 200,
+            "description": "OK"
+          },
+      "events": [
+        {
+          "eventType": "invite",
+          "parameters": {
+            "to": {
+              "url": "https://youraccount.pythonanywhere.com"
+            }
+           }
+         },
+          {
+          "eventType": "utterance",
+            "parameters": {
+              "dialogEvent": {
+                "speakerId": "humanOrAssistantID",
+                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+                "features": {
+                  "text": {
+                    "mimeType": "text/plain",
+                    "tokens": [ { "value": "Tell me about the book The Heart of Darkness please" } ] 
+                  }
+                }
+              }
+            }
+          }
+      ]
+    }
+  }
+```
+* Expected answer:
+```
+{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.0", "url": "not_published_yet"},
+"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "whisper", "parameters": {"concepts":
+[{"concept": "politeness", "matchedWords": ["please"]}]}}, {"eventType": "utterance", "parameters": {"dialogEvent":
+{"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:19:24"}, "features": {"text": {"mimeType": "text/plain",
+"tokens": [{"value": "Hello! How can I assist you today?"}]}}}}}]}}
 ```

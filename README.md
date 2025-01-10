@@ -214,7 +214,7 @@ anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languag
 "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:13:44"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
-### Example 2: Send an utterances
+### Example 2: Send an utterance
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```

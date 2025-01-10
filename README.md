@@ -178,8 +178,7 @@ When the input_text contains **any** of the examples it will return "amphibian".
 #### 8. Now is a good time to clone the **open-voice-sandbox** mentioned above.
 * It will allow you to access your assistant via voice or text. But you will have to add your assistant to the sandbox list of assistants via the Add_Existing_Assistant function.
 # 9. Basic test with Postman
-* POST:
-* http://youraccount.pythonanywhere.com
+* POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
 {

@@ -181,26 +181,29 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * POST:
 * http://youraccount.pythonanywhere.com
 * Body:
-* {
-*  "ovon": {
-*     "schema": {
-*       "version": "0.9.3"
-*     },
-*     "conversation": {
-*       "id": "31050879662407560061859425913208"
-*     },
-*     "sender": {
-*       "from": "https://someBot.com"
-*     },
-*     "events": [
-*       {
-*         "to": "https://youraccount.pythonanywhere.com",
-*         "eventType": "requestManifest"
-*       }
-*     ]
-*   }
-* }
+```
+{
+ "ovon": {
+    "schema": {
+      "version": "0.9.3"
+    },
+    "conversation": {
+      "id": "31050879662407560061859425913208"
+    },
+    "sender": {
+      "from": "https://someBot.com"
+    },
+    "events": [
+      {
+        "to": "https://youraccount.pythonanywhere.com",
+        "eventType": "requestManifest"
+      }
+    ]
+  }
+}
+```
 * Expected answer:
+```
 {"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.0", "url":
 "not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType":
 "publishManifest", "parameters": {"manifest": {"identification": {"serviceEndpoint":
@@ -210,5 +213,4 @@ anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languag
 ["Didacus test code", "Didacus simple minded unit test code"], "supportedLayers": ["text"]}]}}}, {"eventType":
 "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:13:44"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
-
-
+```

@@ -1,10 +1,23 @@
+import openai
 import json
 from datetime import datetime
 import os
-import weather_api # importing weather_api.py file -- GET API key and put on line 90 --> https://openweathermap.org/api
+import weather_api
 import re
 
 conversation_state = {}
+
+with open("/home/lrb24/mysite/assistant_config.json", "r") as file:
+    agent_config = json.load(file)
+
+openai.api_key = agent_config.get("AIKey")
+weather_key = agent_config.get("weatherAPI")
+manifest = agent_config.get("manifest")
+
+messages = [
+    {"role": "system", "content": agent_config["personalPrompt"]},
+    {"role": "system", "content": agent_config["functionPrompt"]}
+]
 
 def extract_location(input_text):
     location_match = re.search(r"(in|for|at) (.+)", input_text, re.IGNORECASE)
@@ -12,7 +25,7 @@ def extract_location(input_text):
         return location_match.group(2)
     else:
         return None
-    
+
 def search_intent(input_text):
     my_dir = os.path.dirname(__file__)
     json_file_path = os.path.join(my_dir, 'intentConcepts.json')
@@ -28,8 +41,9 @@ def search_intent(input_text):
             matched_intents.append({"intent": "weather", "location": location})
         else:
             matched_intents.append({"intent": "weather", "location": "unknown"})
+
     for concept in concepts_data["concepts"]:
-        matched_words = [word for word in concept["examples"] if word in input_text.lower()]
+        matched_words = [word for word in concept["examples"] if word in input_text_lower]
         if matched_words:
             matched_intents.append({"intent": concept["name"], "matched_words": matched_words})
     return matched_intents if matched_intents else None
@@ -39,6 +53,47 @@ def celsius_to_fahrenheit(celsius):
 
 server_info = ""
 
+def generate_openai_response(prompt):
+    """Call OpenAI's API to generate a response based on the prompt."""
+    try:
+        # Build the message history from conversation_state, if available
+        message_history = [{"role": "system", "content": "You are a helpful assistant named pete"}]
+
+        # Add prior context/messages from the conversation state
+        if "messages" in conversation_state:
+            message_history.extend(conversation_state["messages"])  # Assuming conversation_state["messages"] is a list of messages
+
+        # Add the latest user message to the conversation
+        message_history.append({"role": "user", "content": prompt})
+
+        # Make the API call
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=message_history,
+            max_tokens=200,
+            temperature=0.7
+        )
+
+        # Ensure response is available before trying to access it
+        if response and "choices" in response and len(response.choices) > 0:
+            assistant_reply = response.choices[0].message["content"].strip()
+
+            # Update conversation_state with the latest assistant reply
+            if "messages" not in conversation_state:
+                conversation_state["messages"] = []
+            conversation_state["messages"].append({"role": "user", "content": prompt})
+            conversation_state["messages"].append({"role": "assistant", "content": assistant_reply})
+
+            return assistant_reply
+        else:
+            return "Error: No valid response received."
+    except openai.OpenAIError as e:  # Catch OpenAI API errors
+        print(f"Error with OpenAI API: {e}")
+        return f"Error with OpenAI API: {str(e)}"
+    except Exception as e:  # Catch general errors
+        print(f"Unexpected error: {e}")
+        return f"Unexpected error: {str(e)}"
+
 def generate_response(inputOVON, sender_from):
     global server_info
     global conversation_history
@@ -47,66 +102,70 @@ def generate_response(inputOVON, sender_from):
     detected_intents = []
     include_manifest_request = False
 
+    openai_api_key = inputOVON["ovon"]["conversation"].get("openAIKey", None)
+
+    if openai_api_key:
+        openai.api_key = openai_api_key
+
     for event in inputOVON["ovon"]["events"]:
         event_type = event["eventType"]
         if event_type == "invite":
-            # Check if there is a whisper event
+            # Handle invite events
             utt_event = next((e for e in inputOVON["ovon"]["events"] if e["eventType"] == "whisper"), None)
 
             if utt_event:
-                # Handle the invite with whisper event
                 whisper_text = utt_event["parameters"]["dialogEvent"]["features"]["text"]["tokens"][0]["value"]
                 detected_intents.extend(search_intent(whisper_text) or [])
                 if detected_intents:
                     response_text = "Hello! How can I assist you today?"
-
             else:
-                # Handle the bare invite event
-                print(event_type)
                 if event_type == "invite":
                     to_url = event.get("sender", {}).get("to", "Unknown")
                     server_info = f"Server: {to_url}"
                     response_text = "Thanks for the invitation, I am ready to assist."
+
         elif event_type == "requestManifest":
-                to_url = event.get("sender", {}).get("to", "Unknown")
-                server_info = f"Server: {to_url}"
-                response_text = "Thanks for asking, here is my manifest."
-                include_manifest_request = True
+            to_url = event.get("sender", {}).get("to", "Unknown")
+            server_info = f"Server: {to_url}"
+            response_text = "Thanks for asking, here is my manifest."
+            include_manifest_request = True
 
         elif event_type == "utterance":
             user_input = event["parameters"]["dialogEvent"]["features"]["text"]["tokens"][0]["value"]
             detected_intents.extend(search_intent(user_input) or [])
-            print(f"Detected intents: {detected_intents}")
             conversation_id = inputOVON["ovon"]["conversation"]["id"]
 
             if conversation_id not in conversation_state:
                 conversation_state[conversation_id] = {}
 
-            for intent in detected_intents:
-                if intent["intent"] == "weather":
-                    location = extract_location(user_input)
-                    if location:
-                        print(f"Extracted location: {location}")
-                        api_key = "469fe24ea9f1ceabc317145b85c4f848" # GET YOUR OWN API key here --> https://openweathermap.org/api
-                        weather_data = weather_api.get_weather(api_key, location)
-                        temp, humidity, weather_report = weather_api.parse_weather_data(weather_data)
-                        conversation_state[conversation_id]["temp_in_celsius"] = temp
-                        response_text = f"Weather in {location}: {weather_report}, Temperature: {temp}°C, Humidity: {humidity}%"
-                        print(f"Generated weather response: {response_text}")
+            if detected_intents:
+                for intent in detected_intents:
+                    if intent["intent"] == "weather":
+                        location = intent.get("location", "unknown")
+                        if location != "unknown":
+                            api_key = weather_key  # Get API key from OpenWeather
+                            weather_data = weather_api.get_weather(api_key, location)
+                            temp, humidity, weather_report = weather_api.parse_weather_data(weather_data)
+                            conversation_state[conversation_id]["temp_in_celsius"] = temp
+                            response_text = (
+                                f"Weather in {location}: {weather_report}, Temperature: {temp}°C, "
+                                f"Humidity: {humidity}%"
+                            )
+                        else:
+                            response_text = "Could you please specify a location?"
+                    elif intent["intent"] == "convertTemperature":
+                        if "temp_in_celsius" in conversation_state[conversation_id]:
+                            temp_in_fahrenheit = celsius_to_fahrenheit(conversation_state[conversation_id]["temp_in_celsius"])
+                            response_text = f"The temperature in Fahrenheit is {temp_in_fahrenheit}°F."
+                        else:
+                            response_text = "I don't have a temperature to convert. Please ask for the weather first."
                     else:
-                        response_text = "Could you please specify a location?"
-                elif intent["intent"] == "convertTemperature":
-                    if "temp_in_celsius" in conversation_state[conversation_id]:
-                        temp_in_fahrenheit = celsius_to_fahrenheit(conversation_state[conversation_id]["temp_in_celsius"])
-                        response_text = f"The temperature in Fahrenheit is {temp_in_fahrenheit}°F."
-                    else:
-                        response_text = "I don't have a temperature to convert. Please ask for the weather first."
-                else:
-                    response_text = "Hello! How can I assist you today?"
+                        response_text = generate_openai_response(user_input)
+            else:
+                response_text = generate_openai_response(user_input)
 
     currentTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # /find the one with utterance, make if statement
     ovon_response = {
         "ovon": {
             "conversation": inputOVON["ovon"]["conversation"],
@@ -119,56 +178,14 @@ def generate_response(inputOVON, sender_from):
         }
     }
 
-    # Construct a single whisper event containing all intents
-    if detected_intents:
-        whisper_event = {
-            "eventType": "whisper",
-            "parameters": {
-                "concepts": [
-                    {
-                        "concept": intent_info["intent"],
-                        "matchedWords": intent_info["matched_words"]
-                    }
-                    for intent_info in detected_intents if "matched_words" in intent_info
-                ]
-            }
-        }
-        ovon_response["ovon"]["events"].append(whisper_event)
 
     if include_manifest_request:
         manifestRequestEvent = {
             "eventType": "publishManifest",
             "parameters": {
-                "manifest" : {
-                    "identification":
-                    {
-                        "serviceEndpoint": "http://lrb24.pythonanywhere.com",
-                        "organization": "Sandbox_LFAI",
-                        "conversationalName": "Pete",
-                        "serviceName": "Python Anywhere",
-                        "role": "Basic assistant",
-                        "synopsis" : "I am a pretty dumb assistant."
-                    },
-                    "capabilities": [
-                        {
-                            "keyphrases": [
-                                "dumb",
-                                "basic",
-                                "lazy"
-                            ],
-                            "languages": [
-                                "en-us"
-                            ],
-                            "descriptions": [
-                                "just some test code to test manifest messages",
-                                "simple minded unit test code"
-                            ],
-                            "supportedLayers": [
-                                "text"
-                            ]
-                        }
-                    ]
-                }
+                "manifest":
+                    manifest
+
             }
         }
         ovon_response["ovon"]["events"].append(manifestRequestEvent)
@@ -192,6 +209,4 @@ def generate_response(inputOVON, sender_from):
     }
     ovon_response["ovon"]["events"].append(utterance_event)
 
-    ovon_response_json = json.dumps(ovon_response)
-
-    return ovon_response_json
+    return json.dumps(ovon_response)

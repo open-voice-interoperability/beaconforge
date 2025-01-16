@@ -162,6 +162,28 @@
         "vacation",
         "trip"
       ]
-    }
+    },
+    {
+      "name": "convertTemperature",
+      "examples": [
+          "convert to fahrenheit",
+          "change to fahrenheit",
+          "temperature in fahrenheit",
+          "convert temperature",
+          "convert the temperature",
+          "convert that to fahrenheit"
+
+      ]
+  },
+  {
+    "name": "weather",
+    "examples": [
+      "what's the weather",
+      "tell me the weather",
+      "what's the weather like",
+      "how's the weather today",
+      "what's the forecast"
+    ]
+  }
   ]
 }

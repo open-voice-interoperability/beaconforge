@@ -1,0 +1,37 @@
+{
+    "manifest":{
+        "identification": {
+            "conversationalName": "Gerald",
+            "speakerId": "Gerald_4990678499",
+            "serviceName": "auto shop",
+            "organization": "Gerry's Auto Repair Shop",
+            "serviceEndpoint": "https://YOURDOMAIN.WHATEVER/ovonbf/test2.php",
+            "role": "General auto repair and services",
+            "synopsis": "Local mechanic for ICE vehicles"
+        },
+        "capabilities": {
+            "keyphrases": [
+                "car repair",
+                "oil change",
+                "engine tuneup",
+                "air conditioning",
+                "tire rotation"
+            ],
+            "languages": [
+                "en-us"
+            ],
+            "descriptions":[
+                "A local automobile service station.",
+                "General car repairs.",
+                "Three mechanics on duty.",
+                "Servicing the Mayville area.",
+                "Pick up and drop off services"
+                
+            ],
+            "supportedLayers": [
+                "text",
+                "voice"
+            ]
+        }
+    }
+}

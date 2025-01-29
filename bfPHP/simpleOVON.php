@@ -13,12 +13,13 @@ function simpleProcessOVON($inputData, $agentFunctions ) {
         $outputData['ovon']['hasEvents'] = 'true'; // ejcDBG
         $newEventArray = [];
         foreach ($inputData['ovon']['events'] as $event) { // Loop to find "invite"
-            if ( $mySpeakerId === $event['to'] || $myURL === $event['to']){ 
+            //if ( $mySpeakerId === $event['to'] || $myURL === $event['to']){ 
                 if ($event['eventType'] === 'invite') {
                     $outputData['ovon']['hasInvite'] = 'true';
                     $say = $agentFunctions->inviteAction();
+                    $newEventArray[] = buildReply( 'utterance', $replyTo,  $mySpeakerId, $say );
                 }
-            }
+            //}
         }
         foreach ($inputData['ovon']['events'] as $event) {
             // ONLY respond to things directed to you

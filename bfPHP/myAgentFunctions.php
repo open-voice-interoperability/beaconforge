@@ -1,5 +1,6 @@
 <?php
 include 'simpleNLP.php';
+include 'miscTools.php';
 
 class agentFunctions {
     private $nlp;
@@ -12,22 +13,22 @@ class agentFunctions {
     private $persistObject = null;
 
     public function __construct( $fileName ) {
-        $this->$nlp = new SimpleNLP( 'intentConcepts.json' );
-        $this->$agent = readJSONFromFile( $agentFileName );
-        $this->$URL = $agent['manifest']['identification']['serviceEndpoint'];
-        $this->$speakerId = $agent['manifest']['identification']['speakerId'];
-        $this->$manifest = $agent['manifest'];
+        $this->nlp = new SimpleNLP( 'intentConcepts.json' );
+        $this->agent = readJSONFromFile( $fileName );
+        $this->URL = $this->agent['manifest']['identification']['serviceEndpoint'];
+        $this->speakerId = $this->agent['manifest']['identification']['speakerId'];
+        $this->manifest = $this->agent['manifest'];
     }
 
-    public function inviteAction( $heard ) {
+    public function inviteAction() {
         $say = "Hello, how can I help?"; 
         return $say;
     }
 
     public function utteranceAction( $heard ) {
         $say = "I heard you ask: $heard"; 
-        $result = $nlp->ejSimpleIntentFromText($inputText);
-        $intents = $nlp->ejSimpleIntent($result);
+        $result = $this->nlp->ejSimpleIntentFromText( $heard );
+        $intents = $this->nlp->ejSimpleIntent($result);
         if( $intents ){
             if( $intents['return'] === true ){
                 if( strlen($intents['assistantName']) > 0 ){
@@ -43,8 +44,8 @@ class agentFunctions {
 
     public function whisperAction( $heard ) {
         $say = "I heard you ask: $heard"; 
-        $result = $nlp->ejSimpleIntentFromText($inputText);
-        $intents = $nlp->ejSimpleIntent($result);
+        $result = $this->nlp->ejSimpleIntentFromText( $heard );
+        $intents = $this->nlp->ejSimpleIntent($result);
         if( $intents ){
             $say = 'I found some intents.'; // do something with them
         }
@@ -52,15 +53,15 @@ class agentFunctions {
     }
 
     public function getURL() {
-        return $this->$URL;
+        return $this->URL;
     }
 
     public function getManifest() {
-        return $this->$manifest;
+        return $this->manifest;
     }
 
     public function getSpeakerId() {
-        return $this->$speakerId;
+        return $this->speakerId;
     }
 }
 ?>

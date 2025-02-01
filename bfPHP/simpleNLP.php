@@ -15,7 +15,7 @@ class SimpleNLP {
 
     }
 
-    public function ejSimpleIntentFromText($inputMessage) {
+    public function simpleIntentFromText($inputMessage) {
         $matchedConcepts = [];
         $message = ' ' . preg_replace('/[^\w\s]/', ' ', $inputMessage) . ' ';
         $message = strtolower($message);
@@ -42,9 +42,9 @@ class SimpleNLP {
         return $matchedConcepts;
     }
 
-    public function ejSimpleIntent($conceptJSON) {
+    public function simpleIntent($conceptJSON) {
         $concept = "";
-        $ejIntent = [
+        $intent = [
             "return" => false,
             "assistantName" => "",
             "repeatLastUtt" => false,
@@ -55,19 +55,19 @@ class SimpleNLP {
             foreach ($conceptJSON as $conceptData) {
                 $concept = $conceptData['concept'];
                 if ($concept === "return") {
-                    $ejIntent["return"] = true;
+                    $intent["return"] = true;
                 } else if ($concept === "delegate") {
-                    $ejIntent["redirect"] = $concept;
+                    $intent["redirect"] = $concept;
                 } else if ($concept === "assistantName") {
-                    $ejIntent["assistantName"] = $conceptData['matchedWords'];
+                    $intent["assistantName"] = $conceptData['matchedWords'];
                 } else if ($concept === "repeatLastUtt") {
-                    $ejIntent["repeatLastUtt"] = true;
+                    $intent["repeatLastUtt"] = true;
                 } else if ($concept === "manifest") {
-                    $ejIntent["manifest"] = true;
+                    $intent["manifest"] = true;
                 }
             }
         }
-        return $ejIntent;
+        return $intent;
     }
 }
 ?>

@@ -8,9 +8,9 @@ class agentFunctions {
     private $URL;
     private $speakerId;
     private $manifest;
-    private $callerId = 'unknown';
     private $persistFileName = '';
     private $persistObject = null;
+    private $ovonTool = null;
 
     public function __construct( $fileName ) {
         $this->nlp = new SimpleNLP( 'intentConcepts.json' );
@@ -20,6 +20,10 @@ class agentFunctions {
         $this->manifest = $this->agent['manifest'];
     }
 
+    public function shareOVONmsg( $oms ) {
+        $this->ovonTool = $oms;
+    }
+
     public function inviteAction() {
         $say = "Hello, how can I help?"; 
         return $say;
@@ -27,8 +31,8 @@ class agentFunctions {
 
     public function utteranceAction( $heard ) {
         $say = "I heard you ask: $heard"; 
-        $result = $this->nlp->ejSimpleIntentFromText( $heard );
-        $intents = $this->nlp->ejSimpleIntent($result);
+        $result = $this->nlp->simpleIntentFromText( $heard );
+        $intents = $this->nlp->simpleIntent($result);
         if( $intents ){
             if( $intents['return'] === true ){
                 if( strlen($intents['assistantName']) > 0 ){
@@ -37,6 +41,11 @@ class agentFunctions {
                     $say = "Sure."; 
                 }
                 $say .= " <<<EMBED_action=return:convener>>>"; // add the embedded 'return' action
+            }elseif( $intents['manifest'] === true ){
+                if( $this->ovonTool != null ){
+                    $this->ovonTool->buildManifestReply( $this->manifest );
+                    $say = "Sure. Here it is!";
+                }
             }
         }
         return $say;
@@ -44,8 +53,8 @@ class agentFunctions {
 
     public function whisperAction( $heard ) {
         $say = "I heard you ask: $heard"; 
-        $result = $this->nlp->ejSimpleIntentFromText( $heard );
-        $intents = $this->nlp->ejSimpleIntent($result);
+        $result = $this->nlp->simpleIntentFromText( $heard );
+        $intents = $this->nlp->simpleIntent($result);
         if( $intents ){
             $say = 'I found some intents.'; // do something with them
         }
@@ -62,6 +71,10 @@ class agentFunctions {
 
     public function getSpeakerId() {
         return $this->speakerId;
+    }
+
+    public function setPersistFileName( $pFileName ) {
+        $this->persistFileName = $pFileName;
     }
 }
 ?>

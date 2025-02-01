@@ -1,91 +1,115 @@
 <?php
 include 'myAgentFunctions.php';
 
-function simpleProcessOVON($inputData, $agentFunctions ) {
-    $outputData = $inputData;
-    $outputData['ovon']['sender']['from'] = $agentFunctions->getURL();
-    $mySpeakerId = $agentFunctions->getSpeakerId();
-    $myURL = $agentFunctions->getURL();
-    $convoID = $inputData['ovon']['conversation']['id'];
-    $replyTo = $inputData['ovon']['sender']['from'];
+function simpleProcessOVON($inputData, $agentFileName ) {
+    $agFun = new agentFunctions( $agentFileName );
+    $oms = new ovonMessages( $inputData, $agFun );
+    $agFun->shareOVONmsg( $oms );
+    $mySpeakerId = $agFun->getSpeakerId();
+    $myURL = $agFun->getURL();
 
     if (isset($inputData['ovon']['events'])) { // is this the expected OVON?
-        $outputData['ovon']['hasEvents'] = 'true'; // ejcDBG
-        $newEventArray = [];
         foreach ($inputData['ovon']['events'] as $event) { // Loop to find "invite"
             //if ( $mySpeakerId === $event['to'] || $myURL === $event['to']){ 
                 if ($event['eventType'] === 'invite') {
-                    $outputData['ovon']['hasInvite'] = 'true';
-                    $say = $agentFunctions->inviteAction();
-                    $newEventArray[] = buildReply( 'utterance', $replyTo,  $mySpeakerId, $say );
+                    $say = $agFun->inviteAction();
+                    $oms->buildUttReply( $say );
                 }
             //}
         }
         foreach ($inputData['ovon']['events'] as $event) {
             // ONLY respond to things directed to you
-
-            $outputData['ovon']['event.to'] = $event['to']; // ejcDBG
-            $outputData['ovon']['mySpeakerId'] = $mySpeakerId; // ejcDBG
-            $outputData['ovon']['myURL'] = $myURL; // ejcDBG
-
             if ( $mySpeakerId === $event['to'] || $myURL === $event['to']){ 
-                $outputData['ovon']['matches spID or url'] = 'true'; // ejcDBG
-
                 if ($event['eventType'] === 'utterance') {
                     $heard = $event['parameters']['dialogEvent']['features']['text']['tokens'][0]['value'];
-                    $say = $agentFunctions->utteranceAction( $heard );
-                    $newEventArray[] = buildReply( 'utterance', $replyTo,  $mySpeakerId, $say );
+                    $say = $agFun->utteranceAction( $heard );
+                    $oms->buildUttReply( $say );
                 }elseif ($event['eventType'] === 'whisper') {
                     $heard = $event['parameters']['dialogEvent']['features']['text']['tokens'][0]['value'];
                     // The is a private message just to you.'
-                    $say = $agentFunctions->whisperAction( $heard );
-                    $newEventArray[] = buildReply( 'whisper', $replyTo,  $mySpeakerId, $say );
+                    $say = $agFun->whisperAction( $heard );
+                    $oms->buildWhispReply( $say );
                 }elseif ($event['eventType'] === 'requestManifest') {
-                    $outputData['ovon']['detected reqMani'] = 'true'; // ejcDBG
-
-                    $manifest = $agentFunctions->getManifest();
-                    $newEventArray[] = buildManifestReply( 'convener', $mySpeakerId, $manifest);
-                    $say = "Manifest sent.";
-                    $newEventArray[] = buildReply( 'utterance', 'human',  $mySpeakerId, $say );
+                    $manifest = $agFun->getManifest();
+                    $oms->buildManifestReply( $manifest);
+                    $oms->buildUttReply( "Manifest sent." );
                 }
             }
         }
-        $outputData['ovon']['events'] = $newEventArray; // add the new events
-        $currentDateTime = new DateTime();
-        $outputData['ovon']['conversation']['startTime'] = $currentDateTime->format('m-d-Y_H:i:s');
     }
-    return $outputData;
+    return $oms->loadForReturn();
 }
 
-function buildReply( $type, $to, $mySpeakerID, $whatToSay ){
-    $newEvent = [
-        'to' => $to,
-        'eventType' => $type,
-        'parameters' => [
-            'dialogEvent' =>[
-                'speakerId'=> $mySpeakerID,
-                'features' => [
-                    'text' => [
-                        'mimeType' => 'text/plain',
-                        'tokens' => [
-                            ['value' => $whatToSay ]
+class ovonMessages {
+    private $eventArray;
+    private $retOVON;
+    private $mySpeakerId;
+    private $myURL;
+    private $replyTo;
+
+    public function __construct( $inputOVON, $agFunc ) {
+        $this->eventArray = [];
+        $this->retOVON = $inputOVON;
+        $this->retOVON['ovon']['sender']['from'] = $agFunc->getURL();
+        $this->mySpeakerId = $agFunc->getSpeakerId();
+        $this->myURL = $agFunc->getURL();
+        $this->replyTo = $inputOVON['ovon']['sender']['from'];
+    }
+
+    public function loadForReturn(){
+        $this->retOVON['ovon']['events'] = $this->eventArray; // add the new events
+        $currentDateTime = new DateTime();
+        $this->retOVON['ovon']['conversation']['startTime'] = $currentDateTime->format('m-d-Y_H:i:s');
+        return $this->retOVON;
+    }
+
+    public function buildUttReply( $whatToSay ){
+        $this->buildReply( 'utterance', $whatToSay );
+    }
+
+    public function buildWhispReply( $whatToSay ){
+        $this->buildReply( 'whisper', $whatToSay );
+    }
+
+    public function buildReply( $type, $whatToSay ){
+        $newEvent = [
+            'to' => $this->replyTo,
+            'eventType' => $type,
+            'parameters' => [
+                'dialogEvent' =>[
+                    'speakerId'=> $this->mySpeakerId,
+                    'features' => [
+                        'text' => [
+                            'mimeType' => 'text/plain',
+                            'tokens' => [
+                                ['value' => $whatToSay ]
+                            ]
                         ]
                     ]
                 ]
             ]
-        ]
-    ];
-    return $newEvent;
-}
+        ];
+        $this->eventArray[] = $newEvent;
+    }
 
-function buildManifestReply( $to, $mySpeakerID, $theManifest ){
-    $newEvent = [
-        'to' => $to,
-        'eventType' => 'publishManifest',
-        'parameters' => [
-            'manifest' => $theManifest
-        ]
-    ];
-    return $newEvent;
+    public function buildManifestReply( $theManifest ){
+        $newEvent = [
+            'to' => $this->replyTo,
+            'eventType' => 'publishManifest',
+            'parameters' => [
+                'manifest' => $theManifest
+            ]
+        ];
+        $this->eventArray[] = $newEvent;
+    }
+
+    public function buildAcknowledge(){
+        // think about who should get this convener? floor? all?
+        $newEvent = [
+            'to' => $this->replyTo,
+            'eventType' => 'acknowledge',
+        ];
+        $this->eventArray[] = $newEvent;
+    }
 }
 ?>

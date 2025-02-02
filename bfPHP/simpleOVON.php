@@ -1,5 +1,12 @@
 <?php
-include 'myAgentFunctions.php';
+// Author: Emmett Coin 2025
+global $agentFunctionsFileName;
+
+if (file_exists($agentFunctionsFileName)) {
+    include $agentFunctionsFileName;
+} else {
+    echo "The file '$agentFunctionsFileName' does not exist.";
+}
 
 function simpleProcessOVON($inputData, $agentFileName ) {
     $agFun = new agentFunctions( $agentFileName );
@@ -7,6 +14,7 @@ function simpleProcessOVON($inputData, $agentFileName ) {
     $agFun->shareOVONmsg( $oms );
     $mySpeakerId = $agFun->getSpeakerId();
     $myURL = $agFun->getURL();
+    $agFun->startUpAction();
 
     if (isset($inputData['ovon']['events'])) { // is this the expected OVON?
         foreach ($inputData['ovon']['events'] as $event) { // Loop to find "invite"
@@ -26,8 +34,7 @@ function simpleProcessOVON($inputData, $agentFileName ) {
                     $oms->buildUttReply( $say );
                 }elseif ($event['eventType'] === 'whisper') {
                     $heard = $event['parameters']['dialogEvent']['features']['text']['tokens'][0]['value'];
-                    // The is a private message just to you.'
-                    $say = $agFun->whisperAction( $heard );
+                    $say = $agFun->whisperAction( $heard ); // This was private message
                     $oms->buildWhispReply( $say );
                 }elseif ($event['eventType'] === 'requestManifest') {
                     $manifest = $agFun->getManifest();
@@ -37,6 +44,7 @@ function simpleProcessOVON($inputData, $agentFileName ) {
             }
         }
     }
+    $agFun->wrapUpAction();
     return $oms->loadForReturn();
 }
 
@@ -57,6 +65,9 @@ class ovonMessages {
     }
 
     public function loadForReturn(){
+        if ( empty( $this->eventArray ) ) {
+            $this->buildAcknowledge();
+        }
         $this->retOVON['ovon']['events'] = $this->eventArray; // add the new events
         $currentDateTime = new DateTime();
         $this->retOVON['ovon']['conversation']['startTime'] = $currentDateTime->format('m-d-Y_H:i:s');

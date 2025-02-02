@@ -1,4 +1,5 @@
 <?php
+// Author: Emmett Coin 2025
 include 'simpleNLP.php';
 include 'miscTools.php';
 
@@ -24,6 +25,15 @@ class agentFunctions {
         $this->ovonTool = $oms;
     }
 
+    public function startUpAction( $heard ) {
+        // some code to initialize this.
+        // e.g. read persistant data or set up llm
+    }
+
+    public function wrapUpAction( $heard ) {
+        // some code to finalize this.
+        // e.g. save persistant data or do final llm post
+    }
     public function inviteAction() {
         $say = "Hello, how can I help?"; 
         return $say;

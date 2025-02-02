@@ -1,4 +1,5 @@
 <?php
+// Author: Emmett Coin 2025
 class SimpleNLP {
     private $myConcepts = null;
 

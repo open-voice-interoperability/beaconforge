@@ -9,6 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") { // preflight (OPTIONS) requests
     exit();
 }
 
+// Author: Emmett Coin 2025
+
+// You can make a different version of the agent functions
+//   and it will be included in the simpleProcessOVON
+global $agentFunctionsFileName;
+$agentFunctionsFileName = 'myAgentFunctions.php'; // this works for testing
+
 include 'simpleOVON.php'; // load simpleProcessOVON 
 
 $inputOVON = json_decode( file_get_contents('php://input'), true); // JSON to PHP var

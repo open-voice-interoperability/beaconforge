@@ -1,7 +1,8 @@
 <?php
 // Author: Emmett Coin 2025
 global $agentFunctionsFileName;
-global $conversationId;
+global $conversationId; // for use by agent functions?
+$conversationId = "abc";
 
 if (file_exists($agentFunctionsFileName)) {
     include $agentFunctionsFileName;
@@ -11,12 +12,13 @@ if (file_exists($agentFunctionsFileName)) {
 
 function simpleProcessOVON($inputData, $agentFileName ) {
     $agFun = new agentFunctions( $agentFileName );
+    $agFun->setConvoId( $inputData['ovon']['conversation']['id'] );
+    $agFun->startUpAction();
     $oms = new ovonMessages( $inputData, $agFun );
     $agFun->shareOVONmsg( $oms );
+
     $mySpeakerId = $agFun->getSpeakerId();
     $myURL = $agFun->getURL();
-    $conversationId = $inputData['ovon']['conversation']['id'];
-    $agFun->startUpAction();
 
     if (isset($inputData['ovon']['events'])) { // is this the expected OVON?
         foreach ($inputData['ovon']['events'] as $event) { // Loop to find "invite"
@@ -125,6 +127,11 @@ class ovonMessages {
             'eventType' => 'acknowledge',
         ];
         $this->eventArray[] = $newEvent;
+    }
+
+    public function addRawEvent( $someEvent ){
+        // You are responsible for building a valid event
+        $this->eventArray[] = $someEvent;
     }
 }
 ?>

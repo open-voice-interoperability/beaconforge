@@ -12,8 +12,11 @@ class agentFunctions {
     private $persistFileName = '';
     private $persistObject = null;
     private $ovonTool = null;
+    private $convoId = '';
+    private $agentJSONFile = '';
 
     public function __construct( $fileName ) {
+        $this->agentJSONFile = $fileName;
         $this->nlp = new SimpleNLP( 'intentConcepts.json' );
         $this->agent = readJSONFromFile( $fileName );
         $this->URL = $this->agent['manifest']['identification']['serviceEndpoint'];
@@ -81,6 +84,10 @@ class agentFunctions {
 
     public function getSpeakerId() {
         return $this->speakerId;
+    }
+
+    public function setConvoId( $someId ) {
+        $this->convoId = $someId;
     }
 
     public function setPersistFileName( $pFileName ) {

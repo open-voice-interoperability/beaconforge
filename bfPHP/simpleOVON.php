@@ -1,6 +1,7 @@
 <?php
 // Author: Emmett Coin 2025
 global $agentFunctionsFileName;
+global $conversationId;
 
 if (file_exists($agentFunctionsFileName)) {
     include $agentFunctionsFileName;
@@ -14,6 +15,7 @@ function simpleProcessOVON($inputData, $agentFileName ) {
     $agFun->shareOVONmsg( $oms );
     $mySpeakerId = $agFun->getSpeakerId();
     $myURL = $agFun->getURL();
+    $conversationId = $inputData['ovon']['conversation']['id'];
     $agFun->startUpAction();
 
     if (isset($inputData['ovon']['events'])) { // is this the expected OVON?
@@ -83,24 +85,26 @@ class ovonMessages {
     }
 
     public function buildReply( $type, $whatToSay ){
-        $newEvent = [
-            'to' => $this->replyTo,
-            'eventType' => $type,
-            'parameters' => [
-                'dialogEvent' =>[
-                    'speakerId'=> $this->mySpeakerId,
-                    'features' => [
-                        'text' => [
-                            'mimeType' => 'text/plain',
-                            'tokens' => [
-                                ['value' => $whatToSay ]
+        if( strlen($whatToSay) > 0 ){ // skip if nothing
+            $newEvent = [
+                'to' => $this->replyTo,
+                'eventType' => $type,
+                'parameters' => [
+                    'dialogEvent' =>[
+                        'speakerId'=> $this->mySpeakerId,
+                        'features' => [
+                            'text' => [
+                                'mimeType' => 'text/plain',
+                                'tokens' => [
+                                    ['value' => $whatToSay ]
+                                ]
                             ]
                         ]
                     ]
                 ]
-            ]
-        ];
-        $this->eventArray[] = $newEvent;
+            ];
+            $this->eventArray[] = $newEvent;
+        }
     }
 
     public function buildManifestReply( $theManifest ){

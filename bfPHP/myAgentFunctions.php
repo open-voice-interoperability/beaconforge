@@ -1,44 +1,35 @@
 <?php
 // Author: Emmett Coin 2025
+include 'baseAgentFunctions.php';
 include 'simpleNLP.php';
-include 'miscTools.php';
 
-class agentFunctions {
+class agentFunctions extends baseAgentFunctions {
     private $nlp;
-    private $agent;
-    private $URL;
-    private $speakerId;
-    private $manifest;
-    private $persistFileName = '';
-    private $persistObject = null;
-    private $ovonTool = null;
-    private $convoId = '';
-    private $agentJSONFile = '';
+    //private $contextObj; // for context maintanence
 
     public function __construct( $fileName ) {
-        $this->agentJSONFile = $fileName;
+        parent::__construct( $fileName ); // You  MUST KEEP this line
+        // add any other thing you might want to init here
         $this->nlp = new SimpleNLP( 'intentConcepts.json' );
-        $this->agent = readJSONFromFile( $fileName );
-        $this->URL = $this->agent['manifest']['identification']['serviceEndpoint'];
-        $this->speakerId = $this->agent['manifest']['identification']['speakerId'];
-        $this->manifest = $this->agent['manifest'];
     }
 
-    public function shareOVONmsg( $oms ) {
-        $this->ovonTool = $oms;
-    }
-
-    public function startUpAction( $heard ) {
+    public function startUpAction() {
         // some code to initialize this.
         // e.g. read persistant data or set up llm
+
+        // Do the following to retrieve an object from the last turn
+        //$this->contextObj = $this->getPersistObject(); 
     }
 
-    public function wrapUpAction( $heard ) {
+    public function wrapUpAction() {
         // some code to finalize this.
         // e.g. save persistant data or do final llm post
+
+        // Do the following to save the object for the next turn
+        //$this->savePersistObject( $this->contextObj ); 
     }
     public function inviteAction() {
-        $say = "Hello, how can I help?"; 
+        $say = 'Hi, how can I help?';
         return $say;
     }
 
@@ -65,33 +56,14 @@ class agentFunctions {
     }
 
     public function whisperAction( $heard ) {
-        $say = "I heard you ask: $heard"; 
+        //The following was a private message just to you.
+        $say = "I heard you whisper: $heard"; 
         $result = $this->nlp->simpleIntentFromText( $heard );
         $intents = $this->nlp->simpleIntent($result);
         if( $intents ){
             $say = 'I found some intents.'; // do something with them
         }
         return $say;
-    }
-
-    public function getURL() {
-        return $this->URL;
-    }
-
-    public function getManifest() {
-        return $this->manifest;
-    }
-
-    public function getSpeakerId() {
-        return $this->speakerId;
-    }
-
-    public function setConvoId( $someId ) {
-        $this->convoId = $someId;
-    }
-
-    public function setPersistFileName( $pFileName ) {
-        $this->persistFileName = $pFileName;
     }
 }
 ?>

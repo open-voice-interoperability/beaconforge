@@ -28,6 +28,7 @@ function readFromFile($filePath) {
 }
 
 function readJSONFromFile($filePath) {
+    $data = null;
     if (file_exists($filePath)) { // file exists?
         $fileHandle = fopen($filePath, 'r');
         if ($fileHandle) {
@@ -35,16 +36,17 @@ function readJSONFromFile($filePath) {
             fclose($fileHandle);
             $data = json_decode($content, true); // Decode JSON to PHP variable
             if (json_last_error() !== JSON_ERROR_NONE) { // Good decode?
-                return "JSON Decode Error";
+                echo "JSON Decode Error";
             }
-            return $data;
         } else {
-            return "Failed to open the file for reading.";
+            echo "Failed to open the file for reading.";
         }
     } else {
-        return "File does not exist.";
+        echo "File does not exist.";
     }
+    return $data;
 }
+
 class FileIO {
     private $path;
 

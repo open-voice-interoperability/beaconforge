@@ -14,7 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") { // preflight (OPTIONS) requests
 // You can make a different version of the agent functions
 //   and it will be included in the simpleProcessOVON
 global $agentFunctionsFileName;
+global $pathForPersistantStorage;
+
 $agentFunctionsFileName = 'myAgentFunctions.php'; // this works for testing
+$pathForPersistantStorage = '../../private/'; // Where the persistant files a written
+$agentDefinitionJSON = 'myManifest2.json'; // AgentDefinition JSON
+
 
 include 'simpleOVON.php'; // load simpleProcessOVON 
 
@@ -24,5 +29,5 @@ if (json_last_error() !== JSON_ERROR_NONE) { // Good decode?
     exit;
 }
 
-echo json_encode( simpleProcessOVON($inputOVON, 'myManifest2.json' ) ); // return OVON
+echo json_encode( simpleProcessOVON($inputOVON, $agentDefinitionJSON ) ); // return OVON
 ?>

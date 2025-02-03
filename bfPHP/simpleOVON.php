@@ -1,8 +1,7 @@
 <?php
 // Author: Emmett Coin 2025
 global $agentFunctionsFileName;
-global $conversationId; // for use by agent functions?
-$conversationId = "abc";
+//global $pathForPersistantStorage;
 
 if (file_exists($agentFunctionsFileName)) {
     include $agentFunctionsFileName;
@@ -11,8 +10,10 @@ if (file_exists($agentFunctionsFileName)) {
 }
 
 function simpleProcessOVON($inputData, $agentFileName ) {
+    global $pathForPersistantStorage;
     $agFun = new agentFunctions( $agentFileName );
     $agFun->setConvoId( $inputData['ovon']['conversation']['id'] );
+    $agFun->usePersist( $pathForPersistantStorage );
     $agFun->startUpAction();
     $oms = new ovonMessages( $inputData, $agFun );
     $agFun->shareOVONmsg( $oms );

@@ -1,11 +1,12 @@
 <?php
 // Author: Emmett Coin 2025
+// This is the class you will modify to implement your agent
 include 'baseAgentFunctions.php';
 include 'simpleNLP.php';
 
 class agentFunctions extends baseAgentFunctions {
     private $nlp;
-    //private $contextObj; // for context maintanence
+    //private $contextObj; // for context maintanence, if you need it.
 
     public function __construct( $fileName ) {
         parent::__construct( $fileName ); // You  MUST KEEP this line
@@ -18,7 +19,9 @@ class agentFunctions extends baseAgentFunctions {
         // e.g. read persistant data or set up llm
 
         // Do the following to retrieve an object from the last turn
-        //$this->contextObj = $this->getPersistObject(); 
+        //$this->contextObj = $this->getPersistObject();
+        
+        //NOTE: This is an object and can be as structured as you need
     }
 
     public function wrapUpAction() {
@@ -34,6 +37,12 @@ class agentFunctions extends baseAgentFunctions {
     }
 
     public function utteranceAction( $heard ) {
+        // This is example code for handling an utterance
+        // When an OVON envelope has an utterance for your agent
+        //   this funtion will be called.
+        // Your agent will process $heard as input and generate
+        //   a $say response that is returned
+
         $say = "I heard you ask: $heard"; 
         $result = $this->nlp->simpleIntentFromText( $heard );
         $intents = $this->nlp->simpleIntent($result);
@@ -56,7 +65,14 @@ class agentFunctions extends baseAgentFunctions {
     }
 
     public function whisperAction( $heard ) {
-        //The following was a private message just to you.
+        //The following is a PRIVATE MESSAGE just to you.
+        // This is example code for handling a whisper event
+        // When an OVON envelope has an whisper for your agent
+        //   this funtion will be called.
+        // Your agent will process $heard as input and generate
+        //   a $say response that is returned as a whisper
+
+
         $say = "I heard you whisper: $heard"; 
         $result = $this->nlp->simpleIntentFromText( $heard );
         $intents = $this->nlp->simpleIntent($result);

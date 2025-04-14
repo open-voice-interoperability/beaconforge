@@ -161,14 +161,10 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 #### 5. Open Bash Console
 * Navigate to "Consoles" tab and open a Bash console.
+#### 6. Install Dependencies
 * In the Bash console, install the necessary dependencies. For example, we need to use Flask and Flask-CORS, run:
-```pip3.13 install --user flask flask-cors```
-``` pip3.13 install --user openai```
+```pip3.10 install --user flask flask-cors```
 * If your assistant will use any other special imports then install them now in the same way.
-#### 6. Setup your Keys and environment
-* Navigate to the Web tab of PythonAnywhere, spot and open the file ending with pythonanywhere_com_wsgi.py.
-* Insert your OpenaAI API Keys (and the weather Key if you have any)
-* Substitute your-pythonanywhere name here project_home = '/home/NAME/mysite'
 #### 7. Running the Server
 * From the "Files" tab, locate the `mysite/flask_app.py` file, and click on it to open it in the PythonAnywhere editor.
 * You **must** upload your server to the pythonanywhere host server. This is not obvious but the `>>>Run` button **only** runs it in your dedicated space. The "swirly-arrows" button **uploads** it to be served on the internet. This may take 10-30 seconds. The last button (just to the right of the `>>>Run` button) is what you want.

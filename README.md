@@ -24,12 +24,9 @@ The PythonAnywhere-hosted assistant (PythonAnywhere folder) consists of two main
 ```
 # Note!!!! you will need to install flask_cors
 #    open a bash console and do this
-#    pip3.10 install --user flask_cors
+#    pip3.13 install --user flask_cors
 ```
 You will only need to do this once after creating you PythonAnywhere account. This will be explained further later in this document.
-### Note: You can run it locally if you have some basic Python experience.
-
-Navigate to the directory containing the file `flask_app.py`. Type the command `python flask_app.py`. (You must also pip install `flask_cors` on your computer) then the Beaconforge server will run as a localhost on your computer.
 
 ### Using the OVON messages
 
@@ -77,11 +74,12 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * Log in to  your PythonAnywhere account and navigate to the Dashboard
 
 * Install Dependencies: **Make sure** to install the required dependencies by opening a Bash console and running the following command:
-    * ``` pip3.10 install --user flask_cors```
+    * ``` pip3.13 install --user flask_cors```
+    * ``` pip3.13 install --user openai```
 
 #### 3. Create Web App in PythonAnywhere 
 * Navigate to the Web tab and follow the steps they show to create a web app.
-* Once finished, it will create a new folder named `/mysite`, this is where we will be working and uploading the files.
+* Once finished, it will create a new folder named `/mysite`, this is where we will be working and uploading the files. Select `flask_app` as a framework.
 #### 4. Upload Your Files
 * Navigate to the "mysite" directory (go to "Files" tab) and upload your assistant files (`flask_app.py`, `assistant.py`, `weather_api.py`, and `intentConcepts.json`) that are found in the beaconforge/PythonAnywhere directory.
 * Note: You should modify the "manifest" section of code in `assistant.py` to describe your assistant. It will simplify adding your assistant to the sandbox client, and it is required for clients in the future to locate your assistant (think web search to find a site).
@@ -163,10 +161,14 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 #### 5. Open Bash Console
 * Navigate to "Consoles" tab and open a Bash console.
-#### 6. Install Dependencies
 * In the Bash console, install the necessary dependencies. For example, we need to use Flask and Flask-CORS, run:
-```pip3.10 install --user flask flask-cors```
+```pip3.13 install --user flask flask-cors```
+``` pip3.13 install --user openai```
 * If your assistant will use any other special imports then install them now in the same way.
+#### 6. Setup your Keys and environment
+* Navigate to the Web tab of PythonAnywhere, spot and open the file ending with pythonanywhere_com_wsgi.py.
+* Insert your OpenaAI API Keys (and the weather Key if you have any)
+* Substitute your-pythonanywhere name here project_home = '/home/NAME/mysite'
 #### 7. Running the Server
 * From the "Files" tab, locate the `mysite/flask_app.py` file, and click on it to open it in the PythonAnywhere editor.
 * You **must** upload your server to the pythonanywhere host server. This is not obvious but the `>>>Run` button **only** runs it in your dedicated space. The "swirly-arrows" button **uploads** it to be served on the internet. This may take 10-30 seconds. The last button (just to the right of the `>>>Run` button) is what you want.

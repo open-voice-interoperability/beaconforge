@@ -219,7 +219,7 @@ anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languag
 {
   "ovon": {
     "schema": {
-      "version": "0.9.3",
+      "version": "0.9.4",
       "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
     },
     "conversation": {

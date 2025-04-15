@@ -197,7 +197,7 @@ def generate_response(inputOVON, sender_from):
         "ovon": {
             "conversation": inputOVON["ovon"]["conversation"],
             "schema": {
-                "version": "0.9.0",
+                "version": "0.9.4",
                 "url": "not_published_yet"
             },
             "sender": {"from": sender_from},

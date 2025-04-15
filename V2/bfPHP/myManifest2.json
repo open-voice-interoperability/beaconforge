@@ -1,0 +1,42 @@
+{
+    "manifest":{
+        "___NOTE___0": "You may remove all the ___NOTE___ elements, they are just to remind the designer",
+        "identification": {
+            "conversationalName": "Gerald",
+            "speakerId": "Gerald_4990678499",
+            "serviceName": "auto shop",
+            "organization": "Gerry's Auto Repair Shop",
+            "___NOTE___1": "You must set the serviceEndpoint to where your agent lives.",
+            "serviceEndpointxxx": "https://YOURDOMAIN.WHATEVER/ovonbf/test2.php",
+            "serviceEndpoint": "https://ejtalk.com/bfPHP/test2.php",
+            "role": "General auto repair and services",
+            "___NOTE___2": "synopsis is used for short, voiced description of capabilities.",
+            "synopsis": "Local mechanic for ICE vehicles"
+        },
+        "capabilities": {
+            "___NOTE___3": "Make 5 to 10 relevant words or phrases. Used for function discovery.",
+            "keyphrases": [
+                "car repair",
+                "oil change",
+                "engine tuneup",
+                "air conditioning",
+                "tire rotation"
+            ],
+            "languages": [
+                "en-us"
+            ],
+            "___NOTE___4": "Make 5 to 10 relevant sentences. Used for function discovery.",
+            "descriptions":[
+                "A local automobile service station.",
+                "General car repairs.",
+                "Three mechanics on duty.",
+                "Servicing the Mayville area.",
+                "Pick up and drop off services"
+            ],
+            "supportedLayers": [
+                "text",
+                "voice"
+            ]
+        }
+    }
+}

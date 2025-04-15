@@ -16,7 +16,6 @@ See please the following Arxiv papers for more information about the specificati
 The official specifications can be found in <br/>
 https://github.com/open-voice-interoperability/docs/tree/main/specifications
 
-
 # V2
 Version 2 of the repository provides a Python framework suitable for Pythonanywhere with 3 x AI Agents orchestrated and ready to be used
 

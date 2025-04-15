@@ -163,7 +163,7 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * Navigate to "Consoles" tab and open a Bash console.
 #### 6. Install Dependencies
 * In the Bash console, install the necessary dependencies. For example, we need to use Flask and Flask-CORS, run:
-```pip3.10 install --user flask flask-cors```
+```pip3.13 install --user flask flask-cors```
 * If your assistant will use any other special imports then install them now in the same way.
 #### 7. Running the Server
 * From the "Files" tab, locate the `mysite/flask_app.py` file, and click on it to open it in the PythonAnywhere editor.
@@ -217,55 +217,60 @@ anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languag
 * Body:
 ```
 {
-    "ovon": {
-      "schema": {
-        "version": "0.9.3",
-        "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
-      },
-      "conversation": {
-        "id": "conv_1699812834794"
-      },
-      "sender": {
-        "from": "https://organization_url_from",
-        "reply-to": "https://organization_url_to"
-      },
-      "responseCode": {
-            "code": 200,
-            "description": "OK"
-          },
-      "events": [
-        {
-          "eventType": "invite",
-          "parameters": {
-            "to": {
-              "url": "https://youraccount.pythonanywhere.com"
-            }
-           }
-         },
-          {
-          "eventType": "utterance",
-            "parameters": {
-              "dialogEvent": {
-                "speakerId": "humanOrAssistantID",
-                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
-                "features": {
-                  "text": {
-                    "mimeType": "text/plain",
-                    "tokens": [ { "value": "Tell me about the book The Heart of Darkness please" } ] 
+  "ovon": {
+    "schema": {
+      "version": "0.9.3",
+      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+    },
+    "conversation": {
+      "id": "conv_1699812834794"
+    },
+    "sender": {
+      "from": "https://organization_url_from",
+      "reply-to": "https://organization_url_to"
+    },
+    "responseCode": {
+      "code": 200,
+      "description": "OK"
+    },
+    "events": [
+      {
+        "eventType": "utterance",
+        "parameters": {
+          "dialogEvent": {
+            "speakerId": "humanOrAssistantID",
+            "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+            "features": {
+              "text": {
+                "mimeType": "text/plain",
+                "tokens": [
+                  {
+                    "value": "Tell me about the book The Heart of Darkness please"
                   }
-                }
+                ]
               }
             }
           }
-      ]
-    }
+        }
+      }
+    ]
   }
+}
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.0", "url": "not_published_yet"},
-"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "whisper", "parameters": {"concepts":
-[{"concept": "politeness", "matchedWords": ["please"]}]}}, {"eventType": "utterance", "parameters": {"dialogEvent":
-{"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:19:24"}, "features": {"text": {"mimeType": "text/plain",
-"tokens": [{"value": "Hello! How can I assist you today?"}]}}}}}]}}
+{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
+"sender": {"from": "http://youracount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
+{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-15 07:26:16"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. I'm glad you're interested
+in \"Heart of Darkness\". It is an intense and powerful novella written by Joseph Conrad, first published in serial form
+in 1899 and then in book form in 1902.\n\nThe story recounts the travel of Charles Marlow, the protagonist, up the Congo
+River in Central Africa, as an agent for a Belgian ivory trading company. The novel is a complex exploration of the
+attitudes people hold on what constitutes a barbarian versus a civilized society, and the attitudes on colonialism and
+racism that were part and parcel of European imperialism.\n\n\"Heart of Darkness\" is notable for its narrative
+structure, as it's a story within a story. Conrad uses innovative, impressionistic methods of description that were new
+and exciting at the time of publication and have since become hallmarks of modernist literature.\n\nPlease note that
+\"Heart of Darkness\" has been both praised and criticized for its handling of the colonial subjects and its portrayal
+of Africa and Africans. It is a profound and influential work that continues to inspire discussions and
+analyses."}]}}}}}]}}
 ```

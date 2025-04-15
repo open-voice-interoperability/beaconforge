@@ -1,11 +1,11 @@
 # Beaconforge V2
-<img src="images/b_forge_logo_tight.png" width="30%" alt="BeaconForge Logo">
+<img src="V2/images/b_forge_logo_tight.png" width="30%" alt="BeaconForge Logo">
 
 ### An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 
 # Overview
 Beaconforge provides a Python framework (with future plans for other languages) for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
-<img src="images/aiovon.png" width="60%" alt="BeaconForge Logo">
+<img src="V2/images/aiovon.png" width="60%" alt="BeaconForge Logo">
 <br />
 
 The picture shows a user interacting with several assistants, agent assistant a, agent assistant b and agent assistant c, which all communicate through the Open Voice specifications. The code in this repository will enable you to create your own versions of these assistants.

@@ -18,7 +18,7 @@ https://github.com/open-voice-interoperability/docs/tree/main/specifications
 
 
 # V2
-Version 2 of the repository provides a Python framework suitable for Pythonanywhere with 3 x AI Agents orchestrated and ready to be used
+Version 2 of the repository provides a Multiagent Python framework suitable for Pythonanywhere with 3 x AI Agents ready to be used.
 
 * Pete: a general purpose agent to provide general infos
 * Athena: a smart library agent to provide information about Books and Authors

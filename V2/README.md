@@ -185,7 +185,7 @@ When the input_text contains **any** of the examples it will return "amphibian".
 
 * At this point you should be able to test if it is running. It will be accessable at `http://yourAcctName.pythonanywhere.com`
 * You can do a postman or curl test now.
-# 9. Basic tests with Postman
+# 8. Basic tests with Postman
 ### Example 1: Get the Manifest
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
@@ -222,7 +222,7 @@ assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["tex
 "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:43:41"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
-### Example 2: Send an utterance.
+### Example 2: Send a specific utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is related to Book concepts, therefore it routes the message to be served by the Athena AI Agent.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
@@ -285,7 +285,67 @@ and exciting at the time of publication and have since become hallmarks of moder
 of Africa and Africans. It is a profound and influential work that continues to inspire discussions and
 analyses."}]}}}}}]}}
 ```
-### Example 3: Send an invite to a specific agent (i.e. Athena)
+### Example 3: Send a general utterance.
+* In this example the Orchestrator dispatcher recognizes that the utterance request is generic and not related to any specific intent concepts, therefore it routes the message to be served by the Pete General Purpose AI Agent.
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+  "ovon": {
+    "schema": {
+      "version": "0.9.4",
+      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+    },
+    "conversation": {
+      "id": "conv_1699812834794"
+    },
+    "sender": {
+      "from": "https://organization_url_from",
+      "reply-to": "https://organization_url_to"
+    },
+    "responseCode": {
+      "code": 200,
+      "description": "OK"
+    },
+    "events": [
+      {
+        "eventType": "utterance",
+        "parameters": {
+          "dialogEvent": {
+            "speakerId": "humanOrAssistantID",
+            "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+            "features": {
+              "text": {
+                "mimeType": "text/plain",
+                "tokens": [
+                  {
+                    "value": "How can I get from London to Paris?"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+```
+* Expected answer:
+```
+{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
+"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
+{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:05:32"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Hi, I'm Pete, your Personal Assistant. There are several ways for you
+to travel from London to Paris:\n\n1. By Train: You can take the Eurostar train from London St. Pancras International to
+Paris Gare du Nord. The journey typically takes a little over 2 hours.\n\n2. By Plane: Numerous airlines fly this route.
+The flight typically takes about an hour, but you'll also need to factor in time for airport security and travel to and
+from the airports.\n\n3. By Car and Ferry: You can drive to Dover, take a ferry to Calais, and then continue driving to
+Paris. This can take 6-7 hours or more, depending on traffic and ferry schedules.\n\n4. By Bus: Various companies, like
+FlixBus or Eurolines, offer bus services from London to Paris. This is a cheaper but longer option, typically taking
+about 8-9 hours.\n\nRemember to check the current travel guidelines and restrictions due to COVID-"}]}}}}}]}}
+```
+### Example 4: Send an invite to a specific agent (i.e. Athena)
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
@@ -327,7 +387,8 @@ analyses."}]}}}}}]}}
 {"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. You can ask me about books
 and authors, and I will be happy to help."}]}}}}}]}}
 ```
-### Example 4: Ask about the weather to the Zeus Agent. This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
+### Example 5: Ask about the weather to the Zeus Agent. 
+* This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```

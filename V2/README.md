@@ -46,7 +46,7 @@ You will need a way to send OVON messages to your assistant server. There are se
 
 You are encouraged to use the code in the sandbox to build your own client. 
 
-###### IMPORTANT NOTES:  The python anywhere server we have created (aka "Pete") in the sandbox uses `weather_api.py`, so if you are copying the code over please make sure to add that file to your structure as well as insuring your own API key from [here]( https://openweathermap.org/api) is present in the `assistant.py` file on line 90
+###### IMPORTANT NOTES:  The pythonanywhere server template we have created in the sandbox uses `weather_api.py` to serve Zeus (the weather agent), and the `OpenAI API` to serve Athena (smart library agent) and Pete (general purpose agent). Therefore if you are copying the code over please make sure to add that file to your structure as well as insuring your own API key from [here]( https://openweathermap.org/api) is present in your `wsgi.py` file (see please the Web section tab of your Pythonanywhere environment).
 
 ## Beaconforge  setup
 

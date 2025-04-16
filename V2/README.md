@@ -222,7 +222,8 @@ assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["tex
 "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:43:41"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
-### Example 2: Send an utterance
+### Example 2: Send an utterance.
+* In this example the Orchestrator dispatcher recognizes that the utterance request is related to Book concepts, therefore it routes the message to be served by the Athena AI Agent.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```

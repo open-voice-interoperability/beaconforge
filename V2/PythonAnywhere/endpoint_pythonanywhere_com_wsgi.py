@@ -3,7 +3,7 @@
 # It works by setting the variable 'application' to a WSGI handler of some
 # description.
 # You can use this file to EDIT your WSGI configuration file that you can find in the Web Tab of your pythonanywhere environment
-# SUBSTITUTE every occurence of "beaconforge" with your pythonanywhere endpoint and the KEYS with your API keys
+# SUBSTITUTE every occurence of "endpoint" with your pythonanywhere endpoint and the KEYS with your API keys
 # The below has been auto-generated for your Flask project
 
 import sys
@@ -11,10 +11,10 @@ import sys
 import os
 os.environ["OPENAI_API_KEY"] = "sk-proj-your-key"  # Your actual OpenAI key here
 os.environ["WEATHER_API_KEY"] = "your-key"
-os.environ["SERVICE_ENDPOINT"] = "https://beaconforge.pythonanywhere.com"
+os.environ["SERVICE_ENDPOINT"] = "https://endpoint.pythonanywhere.com"
 
 # add your project directory to the sys.path
-project_home = '/home/beaconforge/mysite'
+project_home = '/home/endpoint/mysite'
 if project_home not in sys.path:
     sys.path = [project_home] + sys.path
 

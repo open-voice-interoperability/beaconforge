@@ -70,5 +70,39 @@
         ]
       }
     }
+  },
+  "zeus": {
+    "assistantName": "Zeus",
+    "assistantTitle": "Weather Agent",
+    "personaPrompt": "You are Zeus, the Weather Agent. Always begin your responses by introducing yourself as Zeus. Greet the user warmly and then provide helpful information about weather. If the user asks anything outside this domain, kindly tell them that you are only entitled to provide weather information.",
+    "manifest": {
+      "identification": {
+        "conversationalName": "zeus",
+        "serviceName": "Weather Agent",
+        "organization": "BeaconForge",
+        "serviceEndpoint": "${SERVICE_ENDPOINT}",
+        "role": "Provide weather forecasts and info",
+        "synopsis": "Weather infos"
+      },
+      "capabilities": {
+        "keyphrases": [
+          "weather",
+          "winds",
+          "rain",
+          "fogs",
+          "snow"
+        ],
+        "languages": [
+          "en-us"
+        ],
+        "descriptions": [
+          "Provides weather info and forecast.",
+          "Ideal for weather info."
+        ],
+        "supportedLayers": [
+          "text"
+        ]
+      }
+    }
   }
 }

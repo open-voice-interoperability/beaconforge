@@ -19,18 +19,13 @@ if service_endpoint:
     agent_config["manifest"]["identification"]["serviceEndpoint"] = service_endpoint
     if "athena" in agent_config and "manifest" in agent_config["athena"]:
         agent_config["athena"]["manifest"]["identification"]["serviceEndpoint"] = service_endpoint
+    if "zeus" in agent_config and "manifest" in agent_config["zeus"]:
+        agent_config["zeus"]["manifest"]["identification"]["serviceEndpoint"] = service_endpoint
 
 messages = [
     {"role": "system", "content": agent_config["personalPrompt"]},
     {"role": "system", "content": agent_config["functionPrompt"]}
 ]
-
-def extract_location(input_text):
-    location_match = re.search(r"(in|for|at) (.+)", input_text, re.IGNORECASE)
-    if location_match:
-        return location_match.group(2)
-    else:
-        return None
 
 def search_intent(input_text):
     my_dir = os.path.dirname(__file__)
@@ -41,17 +36,11 @@ def search_intent(input_text):
     matched_intents = []
     input_text_lower = input_text.lower()
 
-    if "weather" in input_text_lower or "forecast" in input_text_lower:
-        location = extract_location(input_text_lower)
-        if location:
-            matched_intents.append({"intent": "weather", "location": location})
-        else:
-            matched_intents.append({"intent": "weather", "location": "unknown"})
-
     for concept in concepts_data["concepts"]:
         matched_words = [word for word in concept["examples"] if word in input_text_lower]
         if matched_words:
             matched_intents.append({"intent": concept["name"], "matched_words": matched_words})
+
     return matched_intents if matched_intents else None
 
 def celsius_to_fahrenheit(celsius):
@@ -116,14 +105,21 @@ def generate_response(inputOVON, sender_from):
     global server_info
     global conversation_history
     server_info = ""
-    response_text = "I'm not sure how to respond."
+    response_text = None
     detected_intents = []
     include_manifest_request = False
-    current_manifest = manifest  # default to Pete
+    current_manifest = manifest
 
     openai_api_key = inputOVON["ovon"]["conversation"].get("openAIKey", None)
     if openai_api_key:
         client.api_key = openai_api_key
+
+    conversation_id = inputOVON["ovon"]["conversation"]["id"]
+    if conversation_id not in conversation_state:
+        conversation_state[conversation_id] = {}
+
+    location_from_whisper = None
+    user_input_text = None
 
     for event in inputOVON["ovon"]["events"]:
         event_type = event["eventType"]
@@ -132,14 +128,18 @@ def generate_response(inputOVON, sender_from):
             to_url = event.get("parameters", {}).get("to", {}).get("url", "")
             if "athena" in to_url.lower():
                 response_text = "Hello, I'm Athena, your Smart Library Agent. You can ask me about books and authors, and I will be happy to help."
+            elif "zeus" in to_url.lower():
+                response_text = "Hello, I'm Zeus, your Weather Agent. Ask me about the forecast!"
             else:
                 server_info = f"Server: {to_url}"
                 response_text = "Hi, I'm Pete, your Personal Assistant. Thanks for the invitation — I'm ready to help!"
 
         elif event_type == "requestManifest":
-            to_url = event.get("to", "")
-            if "athena" in to_url.lower():
-                current_manifest = agent_config.get("athena", {}).get("manifest", manifest)
+            to_url = event.get("to", "").lower()
+            for name in ["athena", "zeus"]:
+                if name in to_url:
+                    current_manifest = agent_config.get(name, {}).get("manifest", manifest)
+                    break
             else:
                 current_manifest = manifest
 
@@ -148,48 +148,46 @@ def generate_response(inputOVON, sender_from):
             include_manifest_request = True
 
         elif event_type == "utterance":
-            user_input = event["parameters"]["dialogEvent"]["features"]["text"]["tokens"][0]["value"]
-            detected_intents.extend(search_intent(user_input) or [])
-            conversation_id = inputOVON["ovon"]["conversation"]["id"]
+            user_input_text = event["parameters"]["dialogEvent"]["features"]["text"]["tokens"][0]["value"]
+            detected_intents.extend(search_intent(user_input_text) or [])
 
-            if conversation_id not in conversation_state:
-                conversation_state[conversation_id] = {}
+        elif event_type == "whisper":
+            location_from_whisper = event["parameters"]["dialogEvent"]["features"]["text"]["tokens"][0]["value"]
 
-            if detected_intents:
-                for intent in detected_intents:
-                    if intent["intent"] == "weather":
-                        location = intent.get("location", "unknown")
-                        if location != "unknown":
-                            try:
-                                weather_data = weather_api.get_weather(weather_key, location)
-                                temp, humidity, weather_report = weather_api.parse_weather_data(weather_data)
-                                conversation_state[conversation_id]["temp_in_celsius"] = temp
-                                response_text = (
-                                    f"Weather in {location}: {weather_report}, Temperature: {temp}°C, "
-                                    f"Humidity: {humidity}%"
-                                )
-                            except Exception as e:
-                                print(f"[Weather Error] {str(e)}")
-                                response_text = f"Sorry, I couldn't retrieve the weather for {location}. {str(e)}"
-                        else:
-                            response_text = "Could you please specify a location?"
+    if detected_intents:
+        for intent in detected_intents:
+            if intent["intent"] in ["weather", "zeus"]:
+                location = location_from_whisper or intent.get("location", "unknown")
+                if location != "unknown":
+                    try:
+                        weather_data = weather_api.get_weather(weather_key, location)
+                        temp, humidity, weather_report = weather_api.parse_weather_data(weather_data)
+                        conversation_state[conversation_id]["temp_in_celsius"] = temp
+                        response_text = (
+                            f"Weather in {location}: {weather_report}, Temperature: {temp}°C, "
+                            f"Humidity: {humidity}%"
+                        )
+                    except Exception as e:
+                        response_text = f"Sorry, I couldn't retrieve the weather for {location}. {str(e)}"
+                else:
+                    response_text = "Could you please provide the location?"
 
-                    elif intent["intent"] == "convertTemperature":
-                        if "temp_in_celsius" in conversation_state[conversation_id]:
-                            temp_in_fahrenheit = celsius_to_fahrenheit(conversation_state[conversation_id]["temp_in_celsius"])
-                            response_text = f"The temperature in Fahrenheit is {temp_in_fahrenheit}°F."
-                        else:
-                            response_text = "I don't have a temperature to convert. Please ask for the weather first."
+            elif intent["intent"] == "convertTemperature":
+                if "temp_in_celsius" in conversation_state[conversation_id]:
+                    temp_in_fahrenheit = celsius_to_fahrenheit(conversation_state[conversation_id]["temp_in_celsius"])
+                    response_text = f"The temperature in Fahrenheit is {temp_in_fahrenheit}°F."
+                else:
+                    response_text = "I don't have a temperature to convert. Please ask for the weather first."
 
-                    elif intent["intent"] == "athena":
-                        print("Athena is handling this request.")
-                        response_text = generate_athena_response(user_input)
-                        current_manifest = agent_config.get("athena", {}).get("manifest", manifest)
+            elif intent["intent"] == "athena":
+                response_text = generate_athena_response(user_input_text)
+                current_manifest = agent_config.get("athena", {}).get("manifest", manifest)
 
-                    else:
-                        response_text = generate_openai_response(user_input)
-            else:
-                response_text = generate_openai_response(user_input)
+    if not detected_intents and user_input_text and not response_text:
+        response_text = generate_openai_response(user_input_text)
+
+    if not response_text:
+        response_text = "I'm not sure how to respond."
 
     currentTime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

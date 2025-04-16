@@ -286,3 +286,114 @@ and exciting at the time of publication and have since become hallmarks of moder
 of Africa and Africans. It is a profound and influential work that continues to inspire discussions and
 analyses."}]}}}}}]}}
 ```
+### Example 3: Send an invite to a specific agent (i.e. Athena)
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+  "ovon": {
+    "schema": {
+      "version": "0.9.4",
+      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+    },
+    "conversation": {
+      "id": "conv_1699812834794"
+    },
+    "sender": {
+      "from": "https://organization_url_from",
+      "reply-to": "https://organization_url_to"
+    },
+    "responseCode": {
+      "code": 200,
+      "description": "OK"
+    },
+    "events": [
+      {
+        "eventType": "invite",
+        "parameters": {
+          "to": {
+            "url": "https://youraccount.pythonanywhere.com/athena"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+* Expected answer:
+```
+{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
+"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
+{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-15 21:25:38"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. You can ask me about books
+and authors, and I will be happy to help."}]}}}}}]}}
+```
+### Example 4: Ask about the weather to the Zeus Agent. This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+    "ovon": {
+      "schema": {
+        "version": "0.9.4",
+        "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+      },
+      "conversation": {
+        "id": "conv_1699812834794"
+      },
+      "sender": {
+        "from": "https://organization_url_from",
+        "reply-to": "https://organization_url_to"
+      },
+      "responseCode": 200,
+      "events": [
+        {
+          "eventType": "invite",
+          "parameters": {
+            "to": {
+              "url": "https://youraccount.pythonanywhere.com"
+            }
+           }
+         },
+          {
+          "eventType": "utterance",
+            "parameters": {
+              "dialogEvent": {
+                "speakerId": "humanOrAssistantID",
+                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+                "features": {
+                  "text": {
+                    "mimeType": "text/plain",
+                    "tokens": [ { "value": "What's the weather like?" } ] 
+                  }
+                }
+              }
+            }
+          },
+          {
+          "eventType": "whisper",
+            "parameters": {
+              "dialogEvent": {
+                "speakerId": "humanOrAssistantID",
+                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+                "features": {
+                  "text": {
+                    "mimeType": "text/plain",
+                    "tokens": [ { "value": "New York" } ] 
+                  }
+                }
+              }
+            }
+          }
+      ]
+    }
+  }
+```
+* Expected answer:
+```
+{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
+"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
+{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:49:40"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Weather in New York: overcast clouds, Temperature: 8.23\u00b0C,
+Humidity: 52%"}]}}}}}]}}
+```

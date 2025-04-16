@@ -26,6 +26,8 @@ Version 2 of the repository provides a Multiagent Python framework suitable for 
 
 A frontend Orchestrator Intent-Based takes care of the routing among AI Agents, based on the user intents.
 
+<img src="images/beaconforge_framework.png" width="60%" alt="BeaconForge Logo">
+
 # Quickstart
 
 ### PythonAnywhere-hosted Assistant

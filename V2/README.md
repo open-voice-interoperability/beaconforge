@@ -186,7 +186,7 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * At this point you should be able to test if it is running. It will be accessable at `http://yourAcctName.pythonanywhere.com`
 * You can do a postman or curl test now.
 # 8. Basic tests with Postman
-### Example 1: Get the Manifest
+### Example 1: Get the Manifest from the General Purpose AI Agent (Pete)
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
@@ -212,17 +212,45 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 * Expected answer:
 ```
+{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.4", "url": "not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "pete", "serviceName": "Personal Assistant", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Help with general tasks.", "synopsis": "Sort of like Jarvis in Iron Man."}, "capabilities": {"keyphrases": ["personal", "assistant", "schedule", "appointments"], "languages": ["en-us"], "descriptions": ["A general purpose administrative assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["text", "voice"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:11:58"}, "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
+```
+### Example 2: Get the Manifest from a specific AI Agent (i.e. Athena)
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+  "ovon": {
+    "schema": {
+      "version": "0.9.4"
+    },
+    "conversation": {
+      "id": "31050879662407560061859425913208"
+    },
+    "sender": {
+      "from": "https://someBot.com"
+    },
+    "events": [
+      {
+        "to": "http://youraccount.pythonanywhere.com/athena",
+        "eventType": "requestManifest"
+      }
+    ]
+  }
+}
+```
+* Expected answer:
+```
 {"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.4", "url":
 "not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType":
-"publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "pete", "serviceName": "Personal
-Assistant", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Help
-with general tasks.", "synopsis": "Sort of like Jarvis in Iron Man."}, "capabilities": {"keyphrases": ["personal",
-"assistant", "schedule", "appointments"], "languages": ["en-us"], "descriptions": ["A general purpose administrative
-assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["text", "voice"]}}}}, {"eventType":
-"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:43:41"},
+"publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "athena", "serviceName": "Smart
+Library", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Provide
+information about books and authors", "synopsis": "Cradle of knowledge"}, "capabilities": {"keyphrases": ["book",
+"author", "library", "literature", "novel"], "languages": ["en-us"], "descriptions": ["Provides book summaries and
+author bios.", "Ideal for literary inquiries and library-style info."], "supportedLayers": ["text"]}}}}, {"eventType":
+"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:13:08"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
-### Example 2: Send a specific utterance.
+### Example 3: Send a specific utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is related to Book concepts, therefore it routes the message to be served by the Athena AI Agent.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
@@ -285,7 +313,7 @@ and exciting at the time of publication and have since become hallmarks of moder
 of Africa and Africans. It is a profound and influential work that continues to inspire discussions and
 analyses."}]}}}}}]}}
 ```
-### Example 3: Send a general utterance.
+### Example 4: Send a general utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is generic and not related to any specific intent concepts, therefore it routes the message to be served by the Pete General Purpose AI Agent.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
@@ -345,7 +373,7 @@ Paris. This can take 6-7 hours or more, depending on traffic and ferry schedules
 FlixBus or Eurolines, offer bus services from London to Paris. This is a cheaper but longer option, typically taking
 about 8-9 hours.\n\nRemember to check the current travel guidelines and restrictions due to COVID-"}]}}}}}]}}
 ```
-### Example 4: Send an invite to a specific agent (i.e. Athena)
+### Example 5: Send an invite to a specific agent (i.e. Athena)
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
@@ -387,7 +415,7 @@ about 8-9 hours.\n\nRemember to check the current travel guidelines and restrict
 {"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. You can ask me about books
 and authors, and I will be happy to help."}]}}}}}]}}
 ```
-### Example 5: Ask about the weather to the Zeus Agent. 
+### Example 6: Ask about the weather to the Zeus Agent. 
 * This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:

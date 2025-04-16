@@ -185,8 +185,6 @@ When the input_text contains **any** of the examples it will return "amphibian".
 
 * At this point you should be able to test if it is running. It will be accessable at `http://yourAcctName.pythonanywhere.com`
 * You can do a postman or curl test now.
-#### 8. Now is a good time to clone the **open-voice-sandbox** mentioned above.
-* It will allow you to access your assistant via voice or text. But you will have to add your assistant to the sandbox list of assistants via the Add_Existing_Assistant function.
 # 9. Basic tests with Postman
 ### Example 1: Get the Manifest
 * POST request to: http://youraccount.pythonanywhere.com

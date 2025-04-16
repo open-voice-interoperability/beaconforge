@@ -129,7 +129,10 @@ def generate_response(inputOVON, sender_from):
             if "athena" in to_url.lower():
                 response_text = "Hello, I'm Athena, your Smart Library Agent. You can ask me about books and authors, and I will be happy to help."
             elif "zeus" in to_url.lower():
-                response_text = "Hello, I'm Zeus, your Weather Agent. Ask me about the forecast!"
+                response_text = (
+                    "Hello, I'm Zeus, your weather information agent. Ask me please about what's the weather like in the utterance "
+                    "and send me the precise location city inside the whisper token, and I will lookup the real time weather information for you."
+                )
             else:
                 server_info = f"Server: {to_url}"
                 response_text = "Hi, I'm Pete, your Personal Assistant. Thanks for the invitation — I'm ready to help!"

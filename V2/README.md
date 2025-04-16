@@ -193,9 +193,9 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * Body:
 ```
 {
- "ovon": {
+  "ovon": {
     "schema": {
-      "version": "0.9.3"
+      "version": "0.9.4"
     },
     "conversation": {
       "id": "31050879662407560061859425913208"
@@ -205,7 +205,7 @@ When the input_text contains **any** of the examples it will return "amphibian".
     },
     "events": [
       {
-        "to": "https://youraccount.pythonanywhere.com",
+        "to": "http://youraccount.pythonanywhere.com",
         "eventType": "requestManifest"
       }
     ]
@@ -214,14 +214,14 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.0", "url":
+{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.4", "url":
 "not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType":
-"publishManifest", "parameters": {"manifest": {"identification": {"serviceEndpoint":
-"http://didacus.pythonanywhere.com", "organization": "Sandbox_LFAI", "conversationalName": "Dieguito", "serviceName":
-"Python Anywhere", "role": "Basic assistant", "synopsis": "I am a pretty general purpose assistant specialized in
-anything."}, "capabilities": [{"keyphrases": ["dumb", "basic", "lazy"], "languages": ["en-us"], "descriptions":
-["Didacus test code", "Didacus simple minded unit test code"], "supportedLayers": ["text"]}]}}}, {"eventType":
-"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-01-10 15:13:44"},
+"publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "pete", "serviceName": "Personal
+Assistant", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Help
+with general tasks.", "synopsis": "Sort of like Jarvis in Iron Man."}, "capabilities": {"keyphrases": ["personal",
+"assistant", "schedule", "appointments"], "languages": ["en-us"], "descriptions": ["A general purpose administrative
+assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["text", "voice"]}}}}, {"eventType":
+"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:43:41"},
 "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
 ### Example 2: Send an utterance

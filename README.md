@@ -16,8 +16,8 @@ See please the following Arxiv papers for more information about the specificati
 The official specifications can be found in <br/>
 https://github.com/open-voice-interoperability/openfloor-docs/tree/main/specifications
 
-# V3
-Version 3 of the repository provides a Multiagent Python framework suitable for Pythonanywhere with 3 x AI Agents ready to be used and the new Open Floor specifications (previously OVON).
+# [Version 3](https://github.com/open-voice-interoperability/beaconforge/tree/main/V3)
+[Version 3](https://github.com/open-voice-interoperability/beaconforge/tree/main/V3) of the repository provides a Multiagent Python framework suitable for Pythonanywhere with 3 x AI Agents ready to be used and the new Open Floor specifications (previously OVON).
 
 * Pete: a general purpose agent to provide general infos
 * Athena: a smart library agent to provide information about Books and Authors

@@ -226,7 +226,7 @@ Man."}, "capabilities": {"keyphrases": ["personal", "assistant", "schedule", "ap
 "descriptions": ["A general purpose administrative assistant.", "Help the human with basic daily tasks."],
 "supportedLayers": ["text", "voice"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
 "tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:41:44+02:00"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "I'm not sure how to respond."}]}}}}}]}}
+{"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
 ### Example 2: Get the Manifest from a specific AI Agent (i.e. Athena)
 * POST request to: http://youraccount.pythonanywhere.com
@@ -266,7 +266,7 @@ knowledge"}, "capabilities": {"keyphrases": ["book", "author", "library", "liter
 ["en-us"], "descriptions": ["Provides book summaries and author bios.", "Ideal for literary inquiries and library-style
 info."], "supportedLayers": ["text"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
 "tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:42:00+02:00"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "..."}]}}}}}]}}
+{"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
 ```
 ### Example 3: Send a specific utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is related to Book concepts, therefore it routes the message to be served by the Athena AI Agent.

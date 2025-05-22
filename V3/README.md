@@ -1,10 +1,12 @@
-# Beaconforge V2
+# Beaconforge V3
 <img src="images/b_forge_logo_tight.png" width="30%" alt="BeaconForge Logo">
 
 ### An agentic AI framework designed to enable multi-agent collaboration through NLP (Natural Language Processing)-based APIs.
 
 # Overview
-Beaconforge provides a Python framework (with future plans for other languages) for initializing an interoperable intelligent assistant that uses the Open Voice Interoperability Initiative specifications.<br />
+Beaconforge provides a Python framework (with future plans for other languages) for initializing an interoperable intelligent assistant that uses the Open Floor specifications:<br />
+https://github.com/open-voice-interoperability/openfloor-docs/tree/main/specifications
+<br />
 <img src="images/aiovon.png" width="60%" alt="BeaconForge Logo">
 <br />
 
@@ -17,8 +19,8 @@ The official specifications can be found in <br/>
 https://github.com/open-voice-interoperability/docs/tree/main/specifications
 
 
-# V2
-Version 2 of the repository provides a Multiagent Python framework suitable for Pythonanywhere with 3 x AI Agents ready to be used.
+# V3
+Version 3 of the repository provides a Multiagent Python framework suitable for Pythonanywhere with 3 x AI Agents ready to be used according to the Open Floor Specifications.
 
 * Pete: a general purpose agent to provide general infos
 * Athena: a smart library agent to provide information about Books and Authors
@@ -191,20 +193,23 @@ When the input_text contains **any** of the examples it will return "amphibian".
 * Body:
 ```
 {
-  "ovon": {
+  "openFloor": {
     "schema": {
-      "version": "0.9.4"
+      "version": "1.0.0"      
     },
     "conversation": {
       "id": "31050879662407560061859425913208"
     },
     "sender": {
-      "from": "https://someBot.com"
+      "serviceUrl": "https://someBot.com",
+      "speakerUri": "tag:someBot.com,2025:4567"
     },
     "events": [
       {
-        "to": "http://youraccount.pythonanywhere.com",
-        "eventType": "requestManifest"
+        "eventType": "getManifests",
+        "to": { 
+          "serviceUrl": "http://youraccount.pythonanywhere.com"
+        }
       }
     ]
   }
@@ -212,27 +217,39 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.4", "url": "not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "pete", "serviceName": "Personal Assistant", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Help with general tasks.", "synopsis": "Sort of like Jarvis in Iron Man."}, "capabilities": {"keyphrases": ["personal", "assistant", "schedule", "appointments"], "languages": ["en-us"], "descriptions": ["A general purpose administrative assistant.", "Help the human with basic daily tasks."], "supportedLayers": ["text", "voice"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:11:58"}, "features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
+{"openFloor": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "1.0.0"}, "sender":
+{"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567"},
+"events": [{"eventType": "publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "pete",
+"serviceName": "Personal Assistant", "organization": "BeaconForge", "serviceEndpoint":
+"https://youraccount.pythonanywhere.com", "role": "Help with general tasks.", "synopsis": "Sort of like Jarvis in Iron
+Man."}, "capabilities": {"keyphrases": ["personal", "assistant", "schedule", "appointments"], "languages": ["en-us"],
+"descriptions": ["A general purpose administrative assistant.", "Help the human with basic daily tasks."],
+"supportedLayers": ["text", "voice"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:41:44+02:00"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "I'm not sure how to respond."}]}}}}}]}}
 ```
 ### Example 2: Get the Manifest from a specific AI Agent (i.e. Athena)
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
 {
-  "ovon": {
+  "openFloor": {
     "schema": {
-      "version": "0.9.4"
+      "version": "1.0.0"      
     },
     "conversation": {
       "id": "31050879662407560061859425913208"
     },
     "sender": {
-      "from": "https://someBot.com"
+      "serviceUrl": "https://someBot.com",
+      "speakerUri": "tag:someBot.com,2025:4567"
     },
     "events": [
       {
-        "to": "http://youraccount.pythonanywhere.com/athena",
-        "eventType": "requestManifest"
+        "eventType": "getManifests",
+        "to": { 
+          "serviceUrl": "http://youraccount.pythonanywhere.com/athena"
+        }
       }
     ]
   }
@@ -240,15 +257,16 @@ When the input_text contains **any** of the examples it will return "amphibian".
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "0.9.4", "url":
-"not_published_yet"}, "sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType":
-"publishManifest", "parameters": {"manifest": {"identification": {"conversationalName": "athena", "serviceName": "Smart
-Library", "organization": "BeaconForge", "serviceEndpoint": "https://youraccount.pythonanywhere.com", "role": "Provide
-information about books and authors", "synopsis": "Cradle of knowledge"}, "capabilities": {"keyphrases": ["book",
-"author", "library", "literature", "novel"], "languages": ["en-us"], "descriptions": ["Provides book summaries and
-author bios.", "Ideal for literary inquiries and library-style info."], "supportedLayers": ["text"]}}}}, {"eventType":
-"utterance", "parameters": {"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:13:08"},
-"features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Thanks for asking, here is my manifest."}]}}}}}]}}
+{"openFloor": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "1.0.0"}, "sender":
+{"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567"},
+"events": [{"eventType": "publishManifest", "parameters": {"manifest": {"identification": {"conversationalName":
+"athena", "serviceName": "Smart Library", "organization": "BeaconForge", "serviceEndpoint":
+"https://youraccount.pythonanywhere.com", "role": "Provide information about books and authors", "synopsis": "Cradle of
+knowledge"}, "capabilities": {"keyphrases": ["book", "author", "library", "literature", "novel"], "languages":
+["en-us"], "descriptions": ["Provides book summaries and author bios.", "Ideal for literary inquiries and library-style
+info."], "supportedLayers": ["text"]}}}}, {"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:42:00+02:00"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "..."}]}}}}}]}}
 ```
 ### Example 3: Send a specific utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is related to Book concepts, therefore it routes the message to be served by the Athena AI Agent.
@@ -256,29 +274,30 @@ author bios.", "Ideal for literary inquiries and library-style info."], "support
 * Body:
 ```
 {
-  "ovon": {
+  "openFloor": {
     "schema": {
-      "version": "0.9.4",
-      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+      "version": "1.0.0"
     },
     "conversation": {
-      "id": "conv_1699812834794"
+      "id": "31050879662407560061859425913208"
     },
     "sender": {
-      "from": "https://organization_url_from",
-      "reply-to": "https://organization_url_to"
-    },
-    "responseCode": {
-      "code": 200,
-      "description": "OK"
+      "serviceUrl": "https://someBot.com",
+      "speakerUri": "tag:someBot.com,2025:4567"
     },
     "events": [
       {
+        "to": {
+          "speakerUri": "tag:someBotOrPerson.com,2025:0021",
+          "private": false
+        },
         "eventType": "utterance",
         "parameters": {
           "dialogEvent": {
-            "speakerId": "humanOrAssistantID",
-            "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+            "speakerUri": "tag:userproxy.acme.com,2025:b5y09lky5KU5",
+            "span": {
+              "startTime": "2023-06-14 02:06:07+00:00"
+            },
             "features": {
               "text": {
                 "mimeType": "text/plain",
@@ -298,20 +317,24 @@ author bios.", "Ideal for literary inquiries and library-style info."], "support
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
-"sender": {"from": "http://youracount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
-{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-15 07:26:16"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. I'm glad you're interested
-in \"Heart of Darkness\". It is an intense and powerful novella written by Joseph Conrad, first published in serial form
-in 1899 and then in book form in 1902.\n\nThe story recounts the travel of Charles Marlow, the protagonist, up the Congo
-River in Central Africa, as an agent for a Belgian ivory trading company. The novel is a complex exploration of the
-attitudes people hold on what constitutes a barbarian versus a civilized society, and the attitudes on colonialism and
-racism that were part and parcel of European imperialism.\n\n\"Heart of Darkness\" is notable for its narrative
-structure, as it's a story within a story. Conrad uses innovative, impressionistic methods of description that were new
-and exciting at the time of publication and have since become hallmarks of modernist literature.\n\nPlease note that
-\"Heart of Darkness\" has been both praised and criticized for its handling of the colonial subjects and its portrayal
-of Africa and Africans. It is a profound and influential work that continues to inspire discussions and
-analyses."}]}}}}}]}}
+{"openFloor": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "1.0.0"}, "sender":
+{"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567"},
+"events": [{"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:44:24+02:00"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. I'm pleased to assist you
+with your query.\n\n\"The Heart of Darkness\" is a classic novel written by Joseph Conrad. Published in 1899, the book
+is a captivating exploration of the harsh realities of European colonialism and imperialism. The narrative is about a
+voyage up the Congo River into the Congo Free State, in the heart of Africa, by the story's narrator,
+Marlow.\n\nMarlow's journey is a metaphorical one, exploring themes of good and evil, morality, and the depths of the
+human soul. As he ventures deeper into the unknown, he is confronted with the darkness within himself and the horrifying
+realization of what mankind is capable of.\n\nJoseph Conrad masterfully intertwines a psychological journey with a
+physical one, resulting in a story that has left a lasting impression on literature. \"Heart of Darkness\" is often
+regarded as an indictment of colonialism, and it raises profound questions about civilization, culture, and what it
+means to be human.\n\nPlease note that while the book is highly acclaimed, it's also been criticized for its depiction
+of Africa and Africans. Conrad's portrayal reflects the prejudices of his time, and contemporary readers often discuss
+these issues while studying the book. \n\nRemember, the story is dense and symbolic, so it might require careful and
+patient reading. But it's a rewarding experience for those who appreciate its themes and Conrad's skillful, atmospheric
+prose."}]}}}}}]}}
 ```
 ### Example 4: Send a general utterance.
 * In this example the Orchestrator dispatcher recognizes that the utterance request is generic and not related to any specific intent concepts, therefore it routes the message to be served by the Pete General Purpose AI Agent.
@@ -319,29 +342,29 @@ analyses."}]}}}}}]}}
 * Body:
 ```
 {
-  "ovon": {
+  "openFloor": {
     "schema": {
-      "version": "0.9.4",
-      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+      "version": "1.0.0"
     },
     "conversation": {
-      "id": "conv_1699812834794"
+      "id": "31050879662407560061859425913208"
     },
     "sender": {
-      "from": "https://organization_url_from",
-      "reply-to": "https://organization_url_to"
-    },
-    "responseCode": {
-      "code": 200,
-      "description": "OK"
+      "serviceUrl": "https://someBot.com",
+      "speakerUri": "tag:someBot.com,2025:4567"
     },
     "events": [
       {
+        "to": {
+          "speakerUri": "tag:someBotOrPerson.com,2025:0021"
+        },
         "eventType": "utterance",
         "parameters": {
           "dialogEvent": {
-            "speakerId": "humanOrAssistantID",
-            "span": { "startTime": "2023-11-14 02:06:07+00:00" },
+            "speakerUri": "tag:userproxy.acme.com,2025:b5y09lky5KU5",
+            "span": {
+              "startTime": "2023-06-14 02:06:07+00:00"
+            },
             "features": {
               "text": {
                 "mimeType": "text/plain",
@@ -361,45 +384,120 @@ analyses."}]}}}}}]}}
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
-"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
-{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 14:05:32"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "Hi, I'm Pete, your Personal Assistant. There are several ways for you
-to travel from London to Paris:\n\n1. By Train: You can take the Eurostar train from London St. Pancras International to
-Paris Gare du Nord. The journey typically takes a little over 2 hours.\n\n2. By Plane: Numerous airlines fly this route.
-The flight typically takes about an hour, but you'll also need to factor in time for airport security and travel to and
-from the airports.\n\n3. By Car and Ferry: You can drive to Dover, take a ferry to Calais, and then continue driving to
-Paris. This can take 6-7 hours or more, depending on traffic and ferry schedules.\n\n4. By Bus: Various companies, like
-FlixBus or Eurolines, offer bus services from London to Paris. This is a cheaper but longer option, typically taking
-about 8-9 hours.\n\nRemember to check the current travel guidelines and restrictions due to COVID-"}]}}}}}]}}
+{"openFloor": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "1.0.0"}, "sender":
+{"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567"},
+"events": [{"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:45:38+02:00"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Hi, I'm Pete, your Personal Assistant. \n\nThere are several ways to
+get from London to Paris:\n\n1. **By Train:** Eurostar offers high-speed train service from London St Pancras
+International to Paris Gare du Nord in approximately 2 hours and 20 minutes. \n\n2. **By Plane:** Several airlines
+operate flights from London to Paris. The flight time is approximately 1 hour, but keep in mind that you'll need to add
+travel time to and from the airports. \n\n3. **By Bus:** Companies like Eurolines and FlixBus offer bus service from
+London to Paris. This is typically the most budget-friendly option, but the journey can take upwards of 7-9 hours.\n\n4.
+**By Car:** You can drive from London to Paris, but it's a bit more complicated because it involves a ferry crossing or
+using the Eurotunnel. The total journey time can vary between 6-7 hours, depending on traffic and the chosen"}]}}}}}]}}
 ```
 ### Example 5: Send an invite to a specific agent (i.e. Athena)
 * POST request to: http://youraccount.pythonanywhere.com
 * Body:
 ```
 {
-  "ovon": {
+  "openFloor": {
+      "schema": {
+        "version": "1.0.0"      
+      },
+      "conversation": {
+        "id": "someUniqueIdCreatedByTheFirstParticipant"
+      },
+      "sender": {
+          "speakerUri": "tag:botThatOfferedTheInvite.com,2025:4567"
+      },
+      "events": [
+          {
+              "eventType": "invite",
+              "to": { 
+                "serviceUrl": "https://youraccount.pythonanywhere.com/athena",
+                "speakerUri": "tag:botBeingInvited.com,2025:1234"
+              }
+          }
+      ]
+  }
+}
+```
+* Expected answer:
+```
+{"openFloor": {"conversation": {"id": "someUniqueIdCreatedByTheFirstParticipant"}, "schema": {"version": "1.0.0"},
+"sender": {"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567"}, "events": [{"eventType": "utterance", "parameters": {"dialogEvent":
+{"speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:46:52+02:00"},
+"features": {"text": {"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. Ask
+me about books or authors!"}]}}}}}]}}
+```
+### Example 6: Ask about the weather to the Zeus Agent. 
+* This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
+* POST request to: http://youraccount.pythonanywhere.com
+* Body:
+```
+{
+  "openFloor": {
     "schema": {
-      "version": "0.9.4",
-      "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
+      "version": "1.0.0"
     },
     "conversation": {
-      "id": "conv_1699812834794"
+      "id": "31050879662407560061859425913208"
     },
     "sender": {
-      "from": "https://organization_url_from",
-      "reply-to": "https://organization_url_to"
-    },
-    "responseCode": {
-      "code": 200,
-      "description": "OK"
+      "serviceUrl": "https://someBot.com",
+      "speakerUri": "tag:someBot.com,2025:4567"
     },
     "events": [
       {
-        "eventType": "invite",
+        "to": {
+          "speakerUri": "tag:someBotOrPerson.com,2025:0021",
+          "private": false
+        },
+        "eventType": "utterance",
         "parameters": {
-          "to": {
-            "url": "https://youraccount.pythonanywhere.com/athena"
+          "dialogEvent": {
+            "speakerUri": "tag:userproxy.acme.com,2025:b5y09lky5KU5",
+            "span": {
+              "startTime": "2023-06-14 02:06:07+00:00"
+            },
+            "features": {
+              "text": {
+                "mimeType": "text/plain",
+                "tokens": [
+                  {
+                    "value": "What's the weather like?"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "to": {
+          "speakerUri": "tag:someBotOrPerson.com,2025:0021",
+          "private": true
+        },
+        "eventType": "utterance",
+        "parameters": {
+          "dialogEvent": {
+            "speakerUri": "tag:userproxy.acme.com,2025:b5y09lky5KU5",
+            "span": {
+              "startTime": "2023-06-14 02:06:07+00:00"
+            },
+            "features": {
+              "text": {
+                "mimeType": "text/plain",
+                "tokens": [
+                  {
+                    "value": "London"
+                  }
+                ]
+              }
+            }
           }
         }
       }
@@ -409,79 +507,10 @@ about 8-9 hours.\n\nRemember to check the current travel guidelines and restrict
 ```
 * Expected answer:
 ```
-{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
-"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
-{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-15 21:25:38"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "Hello, I'm Athena, your Smart Library Agent. You can ask me about books
-and authors, and I will be happy to help."}]}}}}}]}}
-```
-### Example 6: Ask about the weather to the Zeus Agent. 
-* This action requires you to properly fill the utterance token with a request for weather and the whisper token value with the specific location (i.e. city), in order to properly call the external openweathermap API.
-* POST request to: http://youraccount.pythonanywhere.com
-* Body:
-```
-{
-    "ovon": {
-      "schema": {
-        "version": "0.9.4",
-        "url": "https://openvoicenetwork.org/schema/dialog-envelope.json"
-      },
-      "conversation": {
-        "id": "conv_1699812834794"
-      },
-      "sender": {
-        "from": "https://organization_url_from",
-        "reply-to": "https://organization_url_to"
-      },
-      "responseCode": 200,
-      "events": [
-        {
-          "eventType": "invite",
-          "parameters": {
-            "to": {
-              "url": "https://youraccount.pythonanywhere.com"
-            }
-           }
-         },
-          {
-          "eventType": "utterance",
-            "parameters": {
-              "dialogEvent": {
-                "speakerId": "humanOrAssistantID",
-                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
-                "features": {
-                  "text": {
-                    "mimeType": "text/plain",
-                    "tokens": [ { "value": "What's the weather like?" } ] 
-                  }
-                }
-              }
-            }
-          },
-          {
-          "eventType": "whisper",
-            "parameters": {
-              "dialogEvent": {
-                "speakerId": "humanOrAssistantID",
-                "span": { "startTime": "2023-11-14 02:06:07+00:00" },
-                "features": {
-                  "text": {
-                    "mimeType": "text/plain",
-                    "tokens": [ { "value": "New York" } ] 
-                  }
-                }
-              }
-            }
-          }
-      ]
-    }
-  }
-```
-* Expected answer:
-```
-{"ovon": {"conversation": {"id": "conv_1699812834794"}, "schema": {"version": "0.9.4", "url": "not_published_yet"},
-"sender": {"from": "http://youraccount.pythonanywhere.com"}, "events": [{"eventType": "utterance", "parameters":
-{"dialogEvent": {"speakerId": "assistant", "span": {"startTime": "2025-04-16 08:49:40"}, "features": {"text":
-{"mimeType": "text/plain", "tokens": [{"value": "Weather in New York: overcast clouds, Temperature: 8.23\u00b0C,
-Humidity: 52%"}]}}}}}]}}
+{"openFloor": {"conversation": {"id": "31050879662407560061859425913208"}, "schema": {"version": "1.0.0"}, "sender":
+{"serviceUrl": "http://youraccount.pythonanywhere.com", "speakerUri": "tag:youraccount.pythonanywhere.com,2025:4567"},
+"events": [{"eventType": "utterance", "parameters": {"dialogEvent": {"speakerUri":
+"tag:youraccount.pythonanywhere.com,2025:4567", "span": {"startTime": "2025-05-22 16:47:41+02:00"}, "features": {"text":
+{"mimeType": "text/plain", "tokens": [{"value": "Weather in London: broken clouds, Temperature: 14.39\u00b0C, Humidity:
+63%"}]}}}}}]}}
 ```

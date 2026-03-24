@@ -1,0 +1,11 @@
+{
+    "exchanges": [
+        {
+            "utt": "Hello, how are you?",
+            "from": "ofpSocketClient",
+            "toMe": false,
+            "toSomeoneElse": false,
+            "said": "I still need a cracker, but I heard Hello, how are you? and I am not sure if it was meant for me."
+        }
+    ]
+}

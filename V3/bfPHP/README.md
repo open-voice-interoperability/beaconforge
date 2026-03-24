@@ -188,7 +188,7 @@ This section is **mandatory** and defines the core identity of your agent. It is
 | `department` | string | No | The area or department within the organization. |
 | `role` | string | No | The agent's job title or role (e.g., "Weather Specialist", "Customer Support"). |
 | `openFloorRoles` | dict | No | OFP roles this agent can perform. E.g., `{ "convener": true }` or `{ "discovery": true }`. |
-| `ALTserviceUrl` | URL string | No | An alternative service URL. The framework will switch to this if a message is directed to it. |
+
 
 **Example:**
 ```json

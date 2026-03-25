@@ -1,0 +1,37 @@
+{	"manifest": {
+		"identification": {
+			"serviceUrl": "http://localhost/public/ov1/ag/beaconforge/run.php",
+			"speakerUri": "Parrot_beaconforge",
+			"conversationalName": "Parrot",
+			"role": "speech repeater",
+			"department": "Birdbraini",
+			"organization": "Aviary Network",
+			"synopsis": "Just dumb repeats of what it hears."
+		},
+		"character": {
+			"headShot": "aParrot.png",
+			"voice": {
+				"vendor": "MS_EDGE",
+				"name": "Zira",
+				"uri": "Microsoft Zira - English (United States)"
+			}
+		  },
+		"capabilities": {
+			"keyphrases": [
+				"repeat",
+				"say what I hear",
+				"polly wants a cracker"
+			],
+			"languages": [
+				"en-us"
+			],
+			"descriptions": [
+				"Just to test if the agent works"
+			],
+			"supportedLayers": [
+				"text",
+				"voice"
+			]
+		}
+	}
+}
